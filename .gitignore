@@ -1,0 +1,14 @@
+Debug/
+Release/
+.vs/
+././Debug/
+././Release/
+ipch/
+*.suo
+*.bak
+*.tmp
+*.sdf
+*.opensdf
+*.ipch
+*.aps
+*.pch
