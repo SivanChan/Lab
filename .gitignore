@@ -1,5 +1,7 @@
 Debug/
 Release/
+bin/
+temp/
 .vs/
 ././Debug/
 ././Release/
@@ -12,3 +14,5 @@ ipch/
 *.ipch
 *.aps
 *.pch
+*.opendb
+*.db

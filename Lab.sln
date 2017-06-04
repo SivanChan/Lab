@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_asio_server", "1_asio_server\1_asio_server.vcxproj", "{121A6664-465E-4B05-B2E6-C159ECF30A12}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2_asio_client", "2_asio_client\2_asio_client.vcxproj", "{C2BEE3DC-82A3-4724-96AF-46C22579FB2C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3_asio_server_async", "3_asio_server_async\3_asio_server_async.vcxproj", "{90E3A139-FEAD-4690-8F34-B80C4E4FE920}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4_modbus", "4_modbus\4_modbus.vcxproj", "{CD5024C0-5A63-4320-B7A6-C5307F729A20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{90E3A139-FEAD-4690-8F34-B80C4E4FE920}.Release|x64.Build.0 = Release|x64
 		{90E3A139-FEAD-4690-8F34-B80C4E4FE920}.Release|x86.ActiveCfg = Release|Win32
 		{90E3A139-FEAD-4690-8F34-B80C4E4FE920}.Release|x86.Build.0 = Release|Win32
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Debug|x64.ActiveCfg = Debug|x64
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Debug|x64.Build.0 = Debug|x64
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Debug|x86.ActiveCfg = Debug|Win32
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Debug|x86.Build.0 = Debug|Win32
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Release|x64.ActiveCfg = Release|x64
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Release|x64.Build.0 = Release|x64
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Release|x86.ActiveCfg = Release|Win32
+		{CD5024C0-5A63-4320-B7A6-C5307F729A20}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
