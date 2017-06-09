@@ -18,6 +18,7 @@ struct service_helloworld
 
 	void start()
 	{
+		std::cout << "start accept" << std::endl;
 		boost::shared_ptr<boost::asio::ip::tcp::socket> psocket(new boost::asio::ip::tcp::socket(iosev_));
 		acceptor_.async_accept(*psocket, boost::bind(&service_helloworld::accept_handler, this, psocket, _1));
 	}
@@ -26,9 +27,8 @@ struct service_helloworld
 	{
 		if (ec)
 			return;
-
+		std::cout << "accept_handler" << std::end;
 		start();
-
 		std::cout << psocket->remote_endpoint().address()<< " " << psocket->remote_endpoint().port() << std::endl;
 		boost::shared_ptr<std::string> pstr(new std::string("hello world async!"));
 		psocket->async_write_some(boost::asio::buffer(*pstr), boost::bind(&service_helloworld::write_handler, this, pstr, _1, _2));
@@ -55,6 +55,8 @@ int main()
 {
 	boost::asio::io_service iosev;
 	service_helloworld sev(iosev);
+
+	
 	sev.start();
 	iosev.run();
 	std::cout << "exit" << std::endl;
