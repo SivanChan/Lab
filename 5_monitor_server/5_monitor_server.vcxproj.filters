@@ -30,7 +30,10 @@
     <ClInclude Include="Log.h">
       <Filter>util</Filter>
     </ClInclude>
-    <ClInclude Include="MonitorServer.h">
+    <ClInclude Include="AppFramework.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
       <Filter>server</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +47,10 @@
     <ClCompile Include="Log.cpp">
       <Filter>util</Filter>
     </ClCompile>
-    <ClCompile Include="MonitorServer.cpp">
+    <ClCompile Include="AppFramework.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
       <Filter>server</Filter>
     </ClCompile>
   </ItemGroup>

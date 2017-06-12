@@ -2,10 +2,17 @@
 //
 
 #include "stdafx.h"
-
+#include <Log.h>
+#include <memory>
 
 int main()
 {
+	using namespace Forge;
+
+
+
+
+
     return 0;
 }
 

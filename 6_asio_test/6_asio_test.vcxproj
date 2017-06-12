@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C2BEE3DC-82A3-4724-96AF-46C22579FB2C}</ProjectGuid>
+    <ProjectGuid>{AE0F096C-A737-4518-82EC-7AED1E9BFB88}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>My2_asio_client</RootNamespace>
+    <RootNamespace>My6_asio_test</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalOptions>/I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/I"." /I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,14 +123,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalOptions>/I"D:\Program Files (x86)\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/I"." /I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalOptions>/LIBPATH:"D:\Program Files (x86)\boost_1_64_0\stage\lib" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/LIBPATH:"E:\SDK\boost_1_64_0\stage\lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -158,7 +158,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="2_asio_client.cpp" />
+    <ClCompile Include="6_asio_test.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

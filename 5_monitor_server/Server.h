@@ -10,20 +10,18 @@
 
 namespace Forge
 {
-	class MonitorServer
+	class Server
 	{
 	public:
-		MonitorServer(boost::asio::io_service & io_server, uint16_t port);
+		Server(boost::asio::io_service & io_server, uint16_t port);
 
 		void Start();
-
+		void Stop();
 
 		void Accepthandler(std::shared_ptr<boost::asio::ip::tcp::socket> & socket,
 			boost::system::error_code ec);
 
-
 	protected:
-		uint16_t port_;
 		boost::asio::io_service &      io_server_;
 		boost::asio::ip::tcp::acceptor acceptor_;
 	};

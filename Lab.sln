@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1_asio_server", "1_asio_server\1_asio_server.vcxproj", "{121A6664-465E-4B05-B2E6-C159ECF30A12}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4_modbus", "4_modbus\4_modbus.vcxproj", "{CD5024C0-5A63-4320-B7A6-C5307F729A20}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5_monitor_server", "5_monitor_server\5_monitor_server.vcxproj", "{5310905B-9DAD-41E9-B3C0-E7BC3E063419}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6_asio_test", "6_asio_test\6_asio_test.vcxproj", "{AE0F096C-A737-4518-82EC-7AED1E9BFB88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,14 @@ Global
 		{5310905B-9DAD-41E9-B3C0-E7BC3E063419}.Release|x64.Build.0 = Release|x64
 		{5310905B-9DAD-41E9-B3C0-E7BC3E063419}.Release|x86.ActiveCfg = Release|Win32
 		{5310905B-9DAD-41E9-B3C0-E7BC3E063419}.Release|x86.Build.0 = Release|Win32
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Debug|x64.ActiveCfg = Debug|x64
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Debug|x64.Build.0 = Debug|x64
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Debug|x86.ActiveCfg = Debug|Win32
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Debug|x86.Build.0 = Debug|Win32
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Release|x64.ActiveCfg = Release|x64
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Release|x64.Build.0 = Release|x64
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Release|x86.ActiveCfg = Release|Win32
+		{AE0F096C-A737-4518-82EC-7AED1E9BFB88}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

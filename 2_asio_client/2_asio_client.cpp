@@ -21,11 +21,13 @@ int main()
 		return -1;
 	}
 
-	char buf[100];
-	size_t len = socket.read_some(buffer(buf), ec);
-	std::cout.write(buf, len);
+	//char buf[100];
+	std::string str;
+	str = "Just Test";
+	size_t len = socket.write_some(buffer(str), ec);
+	std::cout.write(str.c_str(), len);
 
-	socket.close();
+	//socket.close();
 	std::cout << "client closed!" << std::endl;
 
 	system("pause");
