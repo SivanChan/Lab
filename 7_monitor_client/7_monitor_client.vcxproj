@@ -91,12 +91,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalOptions>/I"." /I"D:\Program Files (x86)\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/I"." /I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>/LIBPATH:"D:\Program Files (x86)\boost_1_64_0\stage\lib" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/LIBPATH:"E:\SDK\boost_1_64_0\stage\lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

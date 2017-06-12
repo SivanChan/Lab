@@ -59,7 +59,7 @@ namespace Forge
 		XMLMessagePack();
 		~XMLMessagePack();
 
-		void SetXML(std::wstring const & xml);
+		void SetXML(std::string const & xml);
 
 		/** ±àÂë*/
 		virtual bool Encode(char* buffer, uint32_t size);
@@ -68,7 +68,7 @@ namespace Forge
 		virtual bool Decode(char const * buffer, uint32_t size);
 
 	protected:
-		std::wstring xml_;
+		std::string xml_;
 	};
 }
 

@@ -91,7 +91,7 @@ namespace Forge
 
 	}
 
-	void XMLMessagePack::SetXML(std::wstring const & xml)
+	void XMLMessagePack::SetXML(std::string const & xml)
 	{
 		xml_ = xml;
 		content_size_ = xml_.length();

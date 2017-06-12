@@ -21,7 +21,7 @@ namespace Forge
 		void Deallocate(void* pointer);
 
 	private:
-		typename std::aligned_storage<1024>::type storage_;
+		/*typename*/ std::aligned_storage<1024>::type storage_;
 		bool in_use_;
 	};
 

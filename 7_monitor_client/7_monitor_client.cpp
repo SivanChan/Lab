@@ -25,7 +25,7 @@ int main()
 	std::string buffer_to_send;
 
 	Forge::XMLMessagePack msg;
-	std::wstring wstr = L"Just Test";
+	std::string wstr = "JustTest";
 	msg.SetXML(wstr);
 	buffer_to_send.resize(msg.PackSize());
 	msg.Encode((char*)buffer_to_send.data(),buffer_to_send.length());

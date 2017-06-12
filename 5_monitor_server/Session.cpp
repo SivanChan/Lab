@@ -20,6 +20,7 @@ namespace Forge
 	void Session::Start()
 	{
 		buffer_.resize(header_size_);
+		DoReadHeader();
 	}
 
 	void Session::DoReadHeader()
@@ -39,7 +40,7 @@ namespace Forge
 	void Session::DoReadBody()
 	{
 		uint32_t body_size = 0;
-		memcpy_s((void*)body_size, sizeof(body_size), buffer_.data() + sizeof(uint8_t), sizeof(body_size));
+		memcpy_s((void*)&body_size, sizeof(body_size), buffer_.data() + sizeof(uint8_t), sizeof(body_size));
 		buffer_.resize(header_size_ + body_size + sizeof(uint8_t));
 
 		auto self(shared_from_this());
