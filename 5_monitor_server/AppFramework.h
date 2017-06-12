@@ -1,11 +1,12 @@
 
-#ifndef Forge_AppFramework_hpp__
-#define Forge_AppFramework_hpp__
+#ifndef AppFramework_h__
+#define AppFramework_h__
 
 #pragma once
 
 #include <boost/asio.hpp>
 #include <Server.h>
+#include <Log.h>
 
 namespace Forge
 {
@@ -15,13 +16,14 @@ namespace Forge
 		AppFramework();
 
 		void Start();
-		void Stop();
 
 	protected:
-		boost::asio::io_service io_service_;
 		uint16_t port_;
-		Server   server_;
+		boost::asio::io_service io_service_;
+		Server server_;
+		LogPtr log_;
 	};
+	typedef std::shared_ptr<AppFramework> AppFrameworkPtr;
 }
 
-#endif // Forge_AppFramework_hpp__
+#endif // AppFramework_h__

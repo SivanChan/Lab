@@ -1,30 +1,27 @@
 
 #include "stdafx.h"
 #include <AppFramework.h>
-#include <Log.h>
 
 namespace Forge
 {
+
 	AppFramework::AppFramework()
 		: port_(8509),
-		server_(io_service_, port_)
+		server_(io_service_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_))
 	{
-		LogPtr log = std::make_shared<Log>();
+		log_ = std::make_shared<Log>();
 #ifdef _DEBUG
-		log->Add(std::make_shared<DebugOutputter>());
+		log_->Add(std::make_shared<DebugOutputter>());
 #endif
-		log->Add(std::make_shared<FileOutputter>("log.txt"));
+		log_->Add(std::make_shared<FileOutputter>("log.txt"));
 	}
 
 	void AppFramework::Start()
 	{
 		server_.Start();
+		io_service_.run();
+
 		Log::Instance().LogMessage("server started!");
 	}
 
-	void AppFramework::Stop()
-	{
-		server_.Stop();
-		Log::Instance().LogMessage("server stoped!");
-	}
 }

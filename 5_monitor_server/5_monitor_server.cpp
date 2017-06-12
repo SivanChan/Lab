@@ -2,16 +2,12 @@
 //
 
 #include "stdafx.h"
-#include <Log.h>
-#include <memory>
+#include <AppFramework.h>
 
 int main()
 {
-	using namespace Forge;
-
-
-
-
+	Forge::AppFrameworkPtr app = std::make_shared<Forge::AppFramework>();
+	app->Start();
 
     return 0;
 }

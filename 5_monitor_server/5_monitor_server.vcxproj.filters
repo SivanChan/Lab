@@ -7,9 +7,6 @@
     <Filter Include="server">
       <UniqueIdentifier>{e0b1c78f-af6c-4784-9e18-91dab4f87c9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="client">
-      <UniqueIdentifier>{7d469558-0ad7-4e0a-9426-cad61ebd0242}</UniqueIdentifier>
-    </Filter>
     <Filter Include="main">
       <UniqueIdentifier>{d6e1f934-7cde-4a53-9bb9-71110c2fead5}</UniqueIdentifier>
     </Filter>
@@ -36,6 +33,15 @@
     <ClInclude Include="Server.h">
       <Filter>server</Filter>
     </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagePack.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="5_monitor_server.cpp">
@@ -51,6 +57,15 @@
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="Server.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagePack.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="Allocator.cpp">
       <Filter>server</Filter>
     </ClCompile>
   </ItemGroup>
