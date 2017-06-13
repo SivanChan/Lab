@@ -45,6 +45,15 @@ namespace Forge
 		void OutputMessage(std::string const & msg);
 	};
 
+	class CoutOutputter : public Outputter
+	{
+	public:
+		std::string const & GetName() const;
+		bool Initialise();
+		void ShutDown();
+		void OutputMessage(std::string const & msg);
+	};
+
 	class  FileOutputter : public Outputter
 	{
 	public:

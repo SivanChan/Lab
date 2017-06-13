@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <Windows.h>
 #include <sstream>
+#include <iostream>
 
 namespace Forge
 {
@@ -131,5 +132,26 @@ namespace Forge
 	uint32_t Log::OutputterNum()
 	{
 		return static_cast<uint32_t>(outputters_.size());
+	}
+
+	std::string const & CoutOutputter::GetName() const
+	{
+		static std::string name("CoutOutputter");
+		return name;
+	}
+
+	bool CoutOutputter::Initialise()
+	{
+		return true;
+	}
+
+	void CoutOutputter::ShutDown()
+	{
+
+	}
+
+	void CoutOutputter::OutputMessage(std::string const & msg)
+	{
+		std::cout << msg << std::endl;
 	}
 }

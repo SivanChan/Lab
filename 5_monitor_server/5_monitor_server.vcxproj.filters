@@ -42,6 +42,9 @@
     <ClInclude Include="Allocator.h">
       <Filter>server</Filter>
     </ClInclude>
+    <ClInclude Include="StringUtil.h">
+      <Filter>util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="5_monitor_server.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
       <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtil.cpp">
+      <Filter>util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

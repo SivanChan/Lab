@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include <Session.h>
 #include <MessagePack.h>
+#include <log.h>
+#include <StringUtil.h>
 
 namespace Forge
 {
@@ -9,12 +11,16 @@ namespace Forge
 		: socket_(std::move(socket)),
 		header_size_(sizeof(uint8_t) + sizeof(uint32_t))
 	{
-
+		std::string str = StringUtil::format("%s:%d connected!",socket_.remote_endpoint().address().to_string().c_str(), 
+			socket_.remote_endpoint().port());
+		Log::Instance().LogMessage(str);
 	}
 
 	Session::~Session()
 	{
-
+		std::string str = StringUtil::format("%s:%d disconnected!", socket_.remote_endpoint().address().to_string().c_str(),
+			socket_.remote_endpoint().port());
+		Log::Instance().LogMessage(str);
 	}
 
 	void Session::Start()
@@ -51,7 +57,8 @@ namespace Forge
 			if (!ec)
 			{
 				XMLMessagePack msg;
-				msg.Decode((char const *)buffer_.data(), buffer_.size());
+				if ( msg.Decode((char const *)buffer_.data(), buffer_.size()) )
+					Log::Instance().LogMessage(msg.GetXML());
 
 				DoReadHeader();
 			}

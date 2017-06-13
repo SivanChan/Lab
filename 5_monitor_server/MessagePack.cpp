@@ -97,6 +97,11 @@ namespace Forge
 		content_size_ = xml_.length();
 	}
 
+	std::string const & XMLMessagePack::GetXML() const
+	{
+		return xml_;
+	}
+
 	bool XMLMessagePack::Encode(char* buffer, uint32_t size)
 	{
 		MessagePack::Encode(buffer, size);

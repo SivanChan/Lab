@@ -13,7 +13,7 @@ int main()
 	using namespace boost::asio;
 	io_service iosev;
 	ip::tcp::socket socket(iosev);
-	ip::tcp::endpoint ep(ip::address_v4::from_string("127.0.0.1"), 8509);
+	ip::tcp::endpoint ep(ip::address_v4::from_string("127.0.0.1"), 20001);
 	boost::system::error_code ec;
 	socket.connect(ep, ec);
 	if (ec)
@@ -31,6 +31,12 @@ int main()
 	msg.Encode((char*)buffer_to_send.data(),buffer_to_send.length());
 
 	size_t len = socket.write_some(buffer(buffer_to_send), ec);
+
+
+	Sleep(3000);
+
+	len = socket.write_some(buffer(buffer_to_send), ec);
+
 	//std::cout.write(str.c_str(), len);
 
 	// socket.close();

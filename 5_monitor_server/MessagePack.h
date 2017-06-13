@@ -60,6 +60,7 @@ namespace Forge
 		~XMLMessagePack();
 
 		void SetXML(std::string const & xml);
+		std::string const & GetXML() const;
 
 		/** ±àÂë*/
 		virtual bool Encode(char* buffer, uint32_t size);
