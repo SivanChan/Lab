@@ -16,7 +16,6 @@ namespace Forge
 		AppFramework();
 
 		void Start();
-		void HeartBeat();
 
 	protected:
 		uint16_t port_;

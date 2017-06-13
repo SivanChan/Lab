@@ -20,19 +20,15 @@ namespace Forge
 		~Session();
 
 		void Start();
-		void HeartBeat();
 
 	protected:
 		void DoReadHeader();
 		void DoReadBody();
-		void DoHeartBeat();
 
 	protected:
 		boost::asio::ip::tcp::socket socket_;
 		std::string buffer_;
 		uint32_t const header_size_;
-		std::string buffer_heartbeat_;
-		boost::asio::deadline_timer timer_;
 	};
 }
 
