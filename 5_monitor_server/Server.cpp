@@ -19,13 +19,12 @@ namespace Forge
 	void Server::Start()
 	{
 		acceptor_.async_accept(socket_,
-			[this](boost::system::error_code ec)
+			[this](boost::system::error_code const & ec)
 		{
 			if (!ec)
 			{
 				std::make_shared<Session>(std::move(socket_))->Start();
 			}
-
 			Start();
 		});
 	}

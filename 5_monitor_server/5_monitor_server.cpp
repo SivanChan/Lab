@@ -9,8 +9,7 @@
 int main()
 {
 	Forge::AppFrameworkPtr app = std::make_shared<Forge::AppFramework>();
-	std::thread thd(boost::bind(&Forge::AppFramework::Start, app));
-	thd.join();
+	app->Start();
     return 0;
 }
 

@@ -6,6 +6,8 @@
 #include <StringUtil.h>
 #include <rapidxml.hpp>
 #include <boost/bind.hpp>
+#include <algorithm>
+#include <iostream>
 
 namespace Forge
 {
@@ -23,17 +25,15 @@ namespace Forge
 	{
 		std::string str = StringUtil::format("%s:%d disconnected!", socket_.remote_endpoint().address().to_string().c_str(),
 			socket_.remote_endpoint().port());
+		socket_.close();
 		Log::Instance().LogMessage(str);
 	}
 
 	void Session::Start()
-	{
-		auto self(shared_from_this());
-		timer_.expires_from_now(boost::posix_time::seconds(0));
-		timer_.async_wait(boost::bind(&Session::DoHeartBeat,self));
-
-		buffer_.resize(header_size_);
-		DoReadHeader();
+	{ 		
+  		auto self(shared_from_this());
+  		timer_.expires_from_now(boost::posix_time::seconds(0));
+  		timer_.async_wait(boost::bind(&Session::DoHeartBeat, self));
 	}
 
 	void Session::HeartBeat()
@@ -43,6 +43,8 @@ namespace Forge
 
 	void Session::DoReadHeader()
 	{
+		buffer_.clear();
+		buffer_.resize(header_size_,'\0');
 		auto self(shared_from_this());
 		boost::asio::async_read( socket_,
 			boost::asio::buffer((char*)buffer_.data(), header_size_),
@@ -63,16 +65,40 @@ namespace Forge
 
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
-			boost::asio::buffer((char*)buffer_.data() + header_size_, body_size + sizeof(uint8_t)),
+			boost::asio::buffer((char*)buffer_.data() + header_size_, body_size + sizeof(uint8_t)*2),
 			[this, self](boost::system::error_code ec, std::size_t )
 		{
 			if (!ec)
 			{
 				XMLMessagePack msg;
-				if ( msg.Decode((char const *)buffer_.data(), buffer_.size()) )
-					Log::Instance().LogMessage(msg.GetXML());
+				msg.Decode((char const *)buffer_.data(), buffer_.size());
 
-				DoReadHeader();
+				std::string const xml_buffer = msg.GetXML();
+
+				bool read_header = true;
+				rapidxml::xml_document<char>   doc;
+				doc.parse<0>((char*)xml_buffer.c_str());
+
+				rapidxml::xml_node<char>* root = doc.first_node("Message");
+				if (root != NULL)
+				{
+					rapidxml::xml_node<char>* body = root->first_node("MessageBody");
+					if (body)
+					{
+						rapidxml::xml_attribute<char> * att = body->first_attribute("Type");
+						if (att != NULL && std::string(att->value()).compare("HeartBeat") == 0)
+						{
+							DoHeartBeat();
+							read_header = false;
+						}
+					}
+				}
+
+				if (read_header)
+				{
+					Log::Instance().LogMessage(msg.GetXML());
+					DoReadHeader();
+				}
 			}
 		});
 	}
@@ -89,17 +115,14 @@ namespace Forge
 		}
 		if (!buffer_heartbeat_.empty())
 		{
+			server_timer_.restart();
 			auto self(shared_from_this());
 			boost::asio::async_write(socket_, boost::asio::buffer((char*)buffer_heartbeat_.data(), buffer_heartbeat_.length()),
 				[this, self](boost::system::error_code ec, std::size_t)
 			{
 				if (!ec)
 				{
-
-					//DoHeartBeat();
-					auto self2(shared_from_this());
-					timer_.expires_from_now(boost::posix_time::seconds(2));
-					timer_.async_wait(boost::bind(&Session::DoHeartBeat, self2));
+					DoReadHeader();
 				}
 			});
 		}

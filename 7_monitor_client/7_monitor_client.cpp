@@ -5,44 +5,47 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <MessagePack.h>
+#include <boost/bind.hpp>
 
-int main()
+using namespace boost::asio;
+io_service iosev;
+ip::tcp::socket socket_(iosev);
+std::string buffer_to_send;
+
+void on_write(boost::system::error_code const & ec, size_t bytes)
 {
-	std::cout << "client started!" << std::endl;
-
-	using namespace boost::asio;
-	io_service iosev;
-	ip::tcp::socket socket(iosev);
-	ip::tcp::endpoint ep(ip::address_v4::from_string("127.0.0.1"), 20001);
-	boost::system::error_code ec;
-	socket.connect(ep, ec);
-	if (ec)
-	{
-		std::cout << boost::system::system_error(ec).what() << std::endl;
-		return -1;
-	}
-
-	std::string buffer_to_send;
+	Sleep(2000);
 
 	Forge::XMLMessagePack msg;
 	std::string wstr = "JustTest";
 	msg.SetXML(wstr);
 	buffer_to_send.resize(msg.PackSize());
-	msg.Encode((char*)buffer_to_send.data(),buffer_to_send.length());
+	msg.Encode((char*)buffer_to_send.data(), buffer_to_send.length());
 
-	size_t len = socket.write_some(buffer(buffer_to_send), ec);
-
-
-	Sleep(3000);
-
-	len = socket.write_some(buffer(buffer_to_send), ec);
-
-	//std::cout.write(str.c_str(), len);
-
-	// socket.close();
-	// std::cout << "client closed!" << std::endl;
-
-	system("pause");
-    return 0;
+	socket_.async_write_some(buffer(buffer_to_send, buffer_to_send.size()),
+		boost::bind(on_write, boost::placeholders::_1, boost::placeholders::_2));
 }
 
+void connect_handler(boost::system::error_code const & ec)
+{
+	Forge::XMLMessagePack msg;
+	std::string wstr = "JustTest";
+	msg.SetXML(wstr);
+	buffer_to_send.resize(msg.PackSize());
+	msg.Encode((char*)buffer_to_send.data(), buffer_to_send.length());
+
+	socket_.async_write_some(buffer(buffer_to_send, buffer_to_send.size()),
+		boost::bind(on_write, boost::placeholders::_1, boost::placeholders::_2));
+}
+
+int main()
+{
+	std::cout << "client started!" << std::endl;
+
+	ip::tcp::endpoint ep(ip::address_v4::from_string("127.0.0.1"), 20001);
+	socket_.async_connect(ep, connect_handler);
+
+	iosev.run();
+
+	return 0;
+}

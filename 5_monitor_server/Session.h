@@ -10,6 +10,7 @@
 #include <array>
 #include <Allocator.h>
 #include <boost/asio.hpp>
+#include <boost/timer.hpp>
 
 namespace Forge
 {
@@ -33,6 +34,7 @@ namespace Forge
 		uint32_t const header_size_;
 		std::string buffer_heartbeat_;
 		boost::asio::deadline_timer timer_;
+		boost::timer server_timer_;
 	};
 }
 

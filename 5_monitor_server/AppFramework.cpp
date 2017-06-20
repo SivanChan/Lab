@@ -18,9 +18,9 @@ namespace Forge
 
 	void AppFramework::Start()
 	{
-		server_.Start();
+		server_.Start();	
 		Log::Instance().LogMessage("server started!");
-		io_service_.run();	
+		io_service_.run();
 	}
 
 	void AppFramework::HeartBeat()
