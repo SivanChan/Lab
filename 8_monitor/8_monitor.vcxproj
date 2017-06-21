@@ -97,7 +97,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalOptions>/I"./server" /I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/I"./server" /I"E:\SDK\boost_1_64_0" /I"E:\SDK\rapidxml-1.13" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalOptions>/I"./server" /I"E:\SDK\boost_1_64_0" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/I"./server" /I"E:\SDK\boost_1_64_0" /I"E:\SDK\rapidxml-1.13" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -208,9 +208,11 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="server\Allocator.h" />
     <ClInclude Include="server\AppFramework.h" />
+    <ClInclude Include="server\ListboxOutputter.h" />
     <ClInclude Include="server\Log.h" />
     <ClInclude Include="server\MessagePack.h" />
     <ClInclude Include="server\Server.h" />
+    <ClInclude Include="server\ServerTree.h" />
     <ClInclude Include="server\Session.h" />
     <ClInclude Include="server\Singleton.h" />
     <ClInclude Include="server\StringUtil.h" />
@@ -227,9 +229,11 @@
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="server\Allocator.cpp" />
     <ClCompile Include="server\AppFramework.cpp" />
+    <ClCompile Include="server\ListboxOutputter.cpp" />
     <ClCompile Include="server\Log.cpp" />
     <ClCompile Include="server\MessagePack.cpp" />
     <ClCompile Include="server\Server.cpp" />
+    <ClCompile Include="server\ServerTree.cpp" />
     <ClCompile Include="server\Session.cpp" />
     <ClCompile Include="server\StringUtil.cpp" />
     <ClCompile Include="stdafx.cpp">

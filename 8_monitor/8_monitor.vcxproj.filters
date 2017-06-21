@@ -75,6 +75,12 @@
     <ClInclude Include="server\AppFramework.h">
       <Filter>server</Filter>
     </ClInclude>
+    <ClInclude Include="server\ListboxOutputter.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\ServerTree.h">
+      <Filter>server</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="8_monitor.cpp">
@@ -120,6 +126,12 @@
       <Filter>server</Filter>
     </ClCompile>
     <ClCompile Include="server\Log.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\ListboxOutputter.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\ServerTree.cpp">
       <Filter>server</Filter>
     </ClCompile>
   </ItemGroup>

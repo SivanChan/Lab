@@ -16,10 +16,18 @@
 #include "8_monitor.h"
 
 #include "MainFrm.h"
+#include <ListboxOutputter.h>
+#include <AppFramework.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
+	ON_WM_CONTEXTMENU()
+END_MESSAGE_MAP()
+
 
 // CMainFrame
 
@@ -90,8 +98,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (!CreateOutlookBar(m_wndNavigationBar, ID_VIEW_NAVIGATION, m_wndTree, m_wndCalendar, 250))
 	{
 		TRACE0("未能创建导航窗格\n");
+		m_wndNavigationBar.SetServerTree(NULL);
 		return -1;      // 未能创建
 	}
+	m_wndNavigationBar.SetServerTree(&m_wndTree);
+	Forge::AppFramework::Instance().SetServerTree(std::make_shared<Forge::ServerTree>(m_wndTree));
+
 
 	// 已创建 Outlook 栏，应允许在左侧停靠。
 	EnableDocking(CBRS_ALIGN_LEFT);
@@ -142,6 +154,7 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("未能创建输出窗口\n");
 		return FALSE; // 未能创建
 	}
+	Forge::Log::Instance().Add( std::make_shared<Forge::ListboxOutputter>(m_wndOutput.GetOutputList()) );
 
 	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 	return TRUE;
@@ -321,4 +334,42 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CMDIFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+	if (pWnd == tree_ && pWnd != NULL)
+	{
+		// 判断位置
+		UINT uFlags;
+		HTREEITEM ht = tree_->HitTest(point,&uFlags);
+		if (ht != NULL && (TVHT_ONITEM & uFlags))
+		{
+			if (tree_->GetItemData(ht) != NULL)
+			{
+				CMenu menu;
+				menu.LoadMenu(IDR_MENU_TREE);
+
+				CMenu* pSumMenu = menu.GetSubMenu(0);
+
+				if (AfxGetMainWnd()->IsKindOf(RUNTIME_CLASS(CMDIFrameWndEx)))
+				{
+					CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
+
+					if (!pPopupMenu->Create(this, point.x, point.y, (HMENU)pSumMenu->m_hMenu, FALSE, TRUE))
+						return;
+
+					((CMDIFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
+					UpdateDialogControls(this, FALSE);
+				}
+			}
+		}
+	}
+
+	CMFCOutlookBar::OnContextMenu(pWnd,point);
+}
+
+void COutlookBar::SetServerTree(CTreeCtrl* tree)
+{
+	tree_ = tree;
 }

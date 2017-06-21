@@ -4,6 +4,13 @@
 
 namespace Forge
 {
+	template<> AppFramework* Singleton<AppFramework>::singleton_ = nullptr;
+
+	AppFramework & AppFramework::Instance()
+	{
+		assert(singleton_);
+		return (*singleton_);
+	}
 
 	AppFramework::AppFramework()
 		: port_(20001),
@@ -19,8 +26,24 @@ namespace Forge
 
 	void AppFramework::Start()
 	{
-		server_.Start();
+		server_.Start();	
 		Log::Instance().LogMessage("server started!");
-		io_service_.run();	
+		io_service_.run();
 	}
+
+	void AppFramework::Stop()
+	{
+		io_service_.stop();
+	}
+
+	void AppFramework::SetServerTree(std::shared_ptr<ServerTree> const & tree)
+	{
+		server_tree_ = tree;
+	}
+
+	std::shared_ptr<Forge::ServerTree> const & AppFramework::GetServerTree() const
+	{
+		return server_tree_;
+	}
+
 }

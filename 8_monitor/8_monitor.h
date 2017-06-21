@@ -18,6 +18,8 @@
 #endif
 
 #include "resource.h"       // Ö÷·ûºÅ
+#include <AppFramework.h>
+#include <thread>
 
 
 // CMy8_monitorApp:
@@ -45,6 +47,10 @@ public:
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	Forge::AppFrameworkPtr app_;
+	std::shared_ptr<std::thread> thd_;
 };
 
 extern CMy8_monitorApp theApp;

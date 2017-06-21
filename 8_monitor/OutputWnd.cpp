@@ -142,6 +142,11 @@ void COutputWnd::UpdateFonts()
 // 	m_wndOutputFind.SetFont(&afxGlobalData.fontRegular);
 }
 
+CListBox & COutputWnd::GetOutputList()
+{
+	return m_wndOutputBuild;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // COutputList1
 

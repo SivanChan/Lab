@@ -21,6 +21,16 @@ class COutlookBar : public CMFCOutlookBar
 {
 	virtual BOOL AllowShowOnPaneMenu() const { return TRUE; }
 	virtual void GetPaneName(CString& strName) const { BOOL bNameValid = strName.LoadString(IDS_OUTLOOKBAR); ASSERT(bNameValid); if (!bNameValid) strName.Empty(); }
+
+public:
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+
+	void SetServerTree(CTreeCtrl* tree);
+
+	DECLARE_MESSAGE_MAP()
+
+protected:
+	CTreeCtrl* tree_;
 };
 
 class CMainFrame : public CMDIFrameWndEx
@@ -48,14 +58,14 @@ public:
 #endif
 
 protected:  // 控件条嵌入成员
-	CMFCRibbonBar     m_wndRibbonBar;
+	CMFCRibbonBar               m_wndRibbonBar;
 	CMFCRibbonApplicationButton m_MainButton;
-	CMFCToolBarImages m_PanelImages;
-	CMFCRibbonStatusBar  m_wndStatusBar;
-	COutputWnd        m_wndOutput;
-	COutlookBar       m_wndNavigationBar;
-	CTreeCtrl m_wndTree;
-	CCalendarBar      m_wndCalendar;
+	CMFCToolBarImages			m_PanelImages;
+	CMFCRibbonStatusBar			m_wndStatusBar;
+	COutputWnd					m_wndOutput;
+	COutlookBar					m_wndNavigationBar;
+	CTreeCtrl					m_wndTree;
+	CCalendarBar				m_wndCalendar;
 
 // 生成的消息映射函数
 protected:

@@ -8,6 +8,10 @@
 
 //std::stringstream StringUtil::ss;
 
+namespace Forge
+{
+
+
 void StringUtil::trim( std::string & str, std::string const & delims /*= " \t\r"*/, bool trim_left /*= true*/, bool trim_right /*= true*/ )
 {
 	if ( trim_right )
@@ -134,4 +138,25 @@ void StringUtil::replace2( std::string & source_str, std::string const & what, s
 		source_str.replace( pos, what.size(), replaced_what );
 		pos += replaced_what.size();
 	}
+}
+
+
+std::string & StringUtil::StringConvert(std::wstring const & src, std::string & dest)
+{
+	int const mbs_len = WideCharToMultiByte(CP_ACP, 0, src.c_str(), static_cast<int>(src.size()), NULL, 0, NULL, NULL);
+	std::vector<char> tmp(mbs_len + 1);
+	WideCharToMultiByte(CP_ACP, 0, src.c_str(), static_cast<int>(src.size()), &tmp[0], mbs_len, NULL, NULL);
+	dest.assign(tmp.begin(), tmp.end() - 1);
+	return dest;
+}
+
+std::wstring & StringUtil::StringConvert(std::string const & src, std::wstring & dest)
+{
+	int const wcs_len = MultiByteToWideChar(CP_ACP, 0, src.c_str(), static_cast<int>(src.size()), NULL, 0);
+	std::vector<wchar_t> tmp(wcs_len + 1);
+	MultiByteToWideChar(CP_ACP, 0, src.c_str(), static_cast<int>(src.size()), &tmp[0], wcs_len);
+	dest.assign(tmp.begin(), tmp.end() - 1);
+	return dest;
+}
+
 }

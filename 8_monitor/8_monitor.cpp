@@ -22,9 +22,13 @@
 #include "8_monitorDoc.h"
 #include "8_monitorView.h"
 
+#include <boost/bind.hpp>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+using namespace Forge;
 
 
 // CMy8_monitorApp
@@ -60,6 +64,7 @@ CMy8_monitorApp::CMy8_monitorApp()
 
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
+	app_ = std::make_shared<AppFramework>();
 }
 
 // 唯一的一个 CMy8_monitorApp 对象
@@ -82,7 +87,6 @@ BOOL CMy8_monitorApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinAppEx::InitInstance();
-
 
 	// 初始化 OLE 库
 	if (!AfxOleInit())
@@ -122,6 +126,7 @@ BOOL CMy8_monitorApp::InitInstance()
 
 	// 注册应用程序的文档模板。  文档模板
 	// 将用作文档、框架窗口和视图之间的连接
+
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CMultiDocTemplate(IDR_My8_monitorTYPE,
 		RUNTIME_CLASS(CMy8_monitorDoc),
@@ -149,11 +154,14 @@ BOOL CMy8_monitorApp::InitInstance()
 
 	// 调度在命令行中指定的命令。  如果
 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
+	//if (!ProcessShellCommand(cmdInfo))
+	//	return FALSE;
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
+
+	// 开启线程
+	thd_ = std::make_shared<std::thread>( boost::bind(&Forge::AppFramework::Start, app_) );
 
 	return TRUE;
 }
@@ -162,6 +170,13 @@ int CMy8_monitorApp::ExitInstance()
 {
 	//TODO: 处理可能已添加的附加资源
 	AfxOleTerm(FALSE);
+
+	// 退出线程
+	if (thd_)
+	{
+		app_->Stop();
+		thd_->join();
+	}
 
 	return CWinAppEx::ExitInstance();
 }

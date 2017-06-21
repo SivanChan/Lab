@@ -6,6 +6,10 @@
 #include <string>
 #include <vector>
 
+namespace Forge
+{
+
+
 /**
 	标准库字符串 工具
 	对std::string使用标准库算法，实现类似于MFC字符串CStringT中的一些方法
@@ -71,6 +75,10 @@ public:
 	*/
 	static int collate(std::string const & lhs, std::string const & rhs);
 	static int collate_no_case(std::string const & lhs, std::string const & rhs);
-};
 
+
+	static std::string & StringUtil::StringConvert(std::wstring const & src, std::string & dest);
+	static std::wstring & StringUtil::StringConvert(std::string const & src, std::wstring & dest);
+};
+}
 #endif // StringUtil_h__

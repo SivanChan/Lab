@@ -41,6 +41,8 @@ public:
 
 	void UpdateFonts();
 
+	CListBox & GetOutputList();
+
 // Ьиад
 protected:
 	CMFCTabCtrl	m_wndTabs;
