@@ -21,6 +21,8 @@
 
 #include "8_monitorDoc.h"
 #include "8_monitorView.h"
+#include <AppFramework.h>
+#include <StringUtil.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,6 +45,8 @@ END_MESSAGE_MAP()
 // CMy8_monitorView 构造/析构
 
 CMy8_monitorView::CMy8_monitorView()
+	: vlc_player_(NULL),
+	vlc_media_(NULL)
 {
 	// TODO: 在此处添加构造代码
 
@@ -50,6 +54,15 @@ CMy8_monitorView::CMy8_monitorView()
 
 CMy8_monitorView::~CMy8_monitorView()
 {
+	if (vlc_player_ != NULL &&
+		vlc_media_ != NULL)
+	{
+		// 停止
+		libvlc_media_player_stop(vlc_player_);
+		// 释放
+		libvlc_media_release(vlc_media_);
+		libvlc_media_player_release(vlc_player_);
+	}
 }
 
 BOOL CMy8_monitorView::PreCreateWindow(CREATESTRUCT& cs)
@@ -101,8 +114,8 @@ void CMy8_monitorView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 
 void CMy8_monitorView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
-	ClientToScreen(&point);
-	OnContextMenu(this, point);
+// 	ClientToScreen(&point);
+// 	OnContextMenu(this, point);
 }
 
 void CMy8_monitorView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
@@ -131,6 +144,47 @@ CMy8_monitorDoc* CMy8_monitorView::GetDocument() const // 非调试版本是内联的
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CMy8_monitorDoc)));
 	return (CMy8_monitorDoc*)m_pDocument;
 }
+
+void CMy8_monitorView::OpenVideo()
+{
+	std::wstring wstr = GetDocument()->GetTitle().GetString();
+	std::string str;
+
+	Forge::StringUtil::StringConvert(wstr, str);
+	if (vlc_player_ == NULL &&
+		vlc_media_ == NULL)
+	{
+		vlc_player_ = libvlc_media_player_new(Forge::AppFramework::Instance().GetVLCInstance());
+
+		if (vlc_player_ != NULL)
+		{
+			//打开一个RTSP流地址，通过地址创建一个媒体实例
+			vlc_media_ = libvlc_media_new_location(Forge::AppFramework::Instance().GetVLCInstance(), str.c_str());
+			if (vlc_media_ != NULL)
+			{
+				// 解析媒体实例
+				libvlc_media_parse(vlc_media_);
+				// 获取媒体文件的播放长度,  返回 ms
+				libvlc_time_t duration = libvlc_media_get_duration(vlc_media_);
+
+				// 此处是获取媒体包含多个的视频和音频轨以及其他类型的轨道信息
+				libvlc_media_track_info_t *media_tracks = NULL;
+				int trackCount = libvlc_media_get_tracks_info(vlc_media_, &media_tracks);
+				// 这里是释放内存，但我测试的时候会有问题，还没仔细研究是为何
+				// free(media_tracks);  // crash?
+
+				// 把打开的媒体文件设置给播放器
+				libvlc_media_player_set_media(vlc_player_, vlc_media_);
+
+				// 因为是windows系统，所以需要设置一个HWND给播放器作为窗口,这里就直接使用桌面窗口,这里仅是测试
+				libvlc_media_player_set_hwnd(vlc_player_, GetSafeHwnd());
+				// 开始播放视频
+				libvlc_media_player_play(vlc_player_);
+			}
+		}
+	}
+}
+
 #endif //_DEBUG
 
 

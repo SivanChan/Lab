@@ -9,6 +9,7 @@
 #include <Log.h>
 #include <ServerTree.h>
 #include <Singleton.h>
+#include <vlc/vlc.h>
 
 namespace Forge
 {
@@ -17,6 +18,7 @@ namespace Forge
 	public:
 		static AppFramework & Instance();
 		AppFramework();
+		~AppFramework();
 
 		void Start();
 		void Stop();
@@ -24,12 +26,15 @@ namespace Forge
 		void SetServerTree(std::shared_ptr<ServerTree> const & tree);
 		std::shared_ptr<ServerTree> const & GetServerTree() const;
 
+		libvlc_instance_t * GetVLCInstance();
+
 	protected:
 		uint16_t port_;
 		boost::asio::io_service io_service_;
 		Server server_;
 		LogPtr log_;
 		std::shared_ptr<ServerTree> server_tree_;
+		libvlc_instance_t *     vlc_ins_;
 	};
 	typedef std::shared_ptr<AppFramework> AppFrameworkPtr;
 }

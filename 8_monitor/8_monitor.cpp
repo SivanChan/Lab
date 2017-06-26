@@ -148,14 +148,15 @@ BOOL CMy8_monitorApp::InitInstance()
 
 	// 分析标准 shell 命令、DDE、打开文件操作的命令行
 	CCommandLineInfo cmdInfo;
+	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
 	ParseCommandLine(cmdInfo);
 
 
 
 	// 调度在命令行中指定的命令。  如果
 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
-	//if (!ProcessShellCommand(cmdInfo))
-	//	return FALSE;
+	if (!ProcessShellCommand(cmdInfo))
+		return FALSE;
 	// 主窗口已初始化，因此显示它并对其进行更新
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();

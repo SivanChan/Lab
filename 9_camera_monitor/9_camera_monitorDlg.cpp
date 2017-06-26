@@ -182,8 +182,8 @@ void CMy9_camera_monitorDlg::InitCamera()
 		if (vlc_player_ != NULL)
 		{
 			//打开一个RTSP流地址，通过地址创建一个媒体实例
-			vlc_media_ = libvlc_media_new_location(vlc_ins_, "rtsp://192.168.1.223:6554/live2");
-
+			//vlc_media_ = libvlc_media_new_location(vlc_ins_, "rtsp://192.168.1.223:6554/live2");
+			vlc_media_ = libvlc_media_new_location(vlc_ins_, "rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov");
 			if (vlc_media_ != NULL)
 			{
 				// 解析媒体实例

@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <vlc/vlc.h>
 
 class CMy8_monitorView : public CView
 {
@@ -27,6 +28,7 @@ public:
 
 // 操作
 public:
+	void OpenVideo();
 
 // 重写
 public:
@@ -53,6 +55,10 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	libvlc_media_player_t * vlc_player_;
+	libvlc_media_t *        vlc_media_;
 };
 
 #ifndef _DEBUG  // 8_monitorView.cpp 中的调试版本

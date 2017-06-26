@@ -18,6 +18,9 @@
 #include "MainFrm.h"
 #include <ListboxOutputter.h>
 #include <AppFramework.h>
+#include <StringUtil.h>
+#include "8_monitorDoc.h"
+#include "8_monitorView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,6 +28,8 @@
 
 
 BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
+	ON_COMMAND(ID_SERVERTREE_MAIN_VIDEO, OnMainVideo)
+	ON_COMMAND(ID_SERVERTREE_SUB_VIDEO, OnSubVideo)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
@@ -340,11 +345,17 @@ void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	if (pWnd == tree_ && pWnd != NULL)
 	{
-		// ÅÐ¶ÏÎ»ÖÃ
+
+		CPoint pt;
+		GetCursorPos(&pt);
+		tree_->ScreenToClient(&pt);
+
 		UINT uFlags;
-		HTREEITEM ht = tree_->HitTest(point,&uFlags);
+		HTREEITEM ht = tree_->HitTest(pt,&uFlags);
 		if (ht != NULL && (TVHT_ONITEM & uFlags))
 		{
+			tree_->SelectItem(ht);
+
 			if (tree_->GetItemData(ht) != NULL)
 			{
 				CMenu menu;
@@ -369,7 +380,79 @@ void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
 	CMFCOutlookBar::OnContextMenu(pWnd,point);
 }
 
+void COutlookBar::OnMainVideo()
+{
+	HTREEITEM ht = tree_->GetSelectedItem();
+	if (ht)
+	{
+		std::wstring wstr = tree_->GetItemText(ht).GetString();
+		std::string str, rtsp_str;
+
+		Forge::StringUtil::StringConvert(wstr,str);
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live1",str.c_str());
+		Forge::StringUtil::StringConvert(rtsp_str,wstr);
+		
+		OpenVideo(wstr);
+	}
+}
+
+void COutlookBar::OnSubVideo()
+{
+	HTREEITEM ht = tree_->GetSelectedItem();
+	if (ht)
+	{
+		std::wstring wstr = tree_->GetItemText(ht).GetString();
+		std::string str, rtsp_str;
+
+		Forge::StringUtil::StringConvert(wstr, str);
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", str.c_str());
+		Forge::StringUtil::StringConvert(rtsp_str, wstr);
+		
+		OpenVideo(wstr);
+	}
+}
+
 void COutlookBar::SetServerTree(CTreeCtrl* tree)
 {
 	tree_ = tree;
+}
+
+void COutlookBar::OpenVideo(std::wstring const & wstr)
+{
+	bool find = false;
+
+	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
+	if (pos != NULL)
+	{
+		CDocTemplate *p = AfxGetApp()->GetNextDocTemplate(pos);
+		POSITION posdoc = p->GetFirstDocPosition();
+		while (posdoc != NULL)
+		{
+			CMy8_monitorDoc* pDoc = (CMy8_monitorDoc*)p->GetNextDoc(posdoc);
+			if (pDoc != NULL)
+			{
+				if (wstr.compare(pDoc->GetTitle().GetString()) == 0)
+				{
+					find = true;
+
+					POSITION posview = pDoc->GetFirstViewPosition();
+					if (posview != NULL)
+					{
+						CView* pV = pDoc->GetNextView(posview);
+						pV->GetParentFrame()->ActivateFrame();
+					}
+					continue;
+				}
+			}
+		}
+	}
+
+	if (!find)
+	{
+		AfxGetMainWnd()->SendMessage(WM_COMMAND, MAKEWPARAM(ID_FILE_NEW, 0), 0);
+		((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView()->GetDocument()->SetTitle(wstr.c_str());
+		((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->SetWindowText(wstr.c_str());
+
+		((CMy8_monitorView*)((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView())->OpenVideo();
+	}
 }

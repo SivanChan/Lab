@@ -1,6 +1,10 @@
 
 #include "stdafx.h"
 #include <AppFramework.h>
+#include <fstream>
+
+#pragma comment(lib, "libvlc.lib")
+#pragma comment(lib, "libvlccore.lib")
 
 namespace Forge
 {
@@ -14,7 +18,8 @@ namespace Forge
 
 	AppFramework::AppFramework()
 		: port_(20001),
-		server_(io_service_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_))
+		server_(io_service_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)),
+		vlc_ins_(NULL)
 	{
 		log_ = std::make_shared<Log>();
 #ifdef _DEBUG
@@ -22,6 +27,23 @@ namespace Forge
 #endif
 		//log_->Add(std::make_shared<CoutOutputter>());
 		log_->Add(std::make_shared<FileOutputter>("log.txt"));
+
+		const char * vlc_args[] =
+		{
+			"-I",
+			"dummy",
+			"--ignore-config",
+			"--verbose=2",
+		};
+		vlc_ins_ = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+	}
+
+	AppFramework::~AppFramework()
+	{
+		if (vlc_ins_ != NULL)
+		{
+			libvlc_release(vlc_ins_);
+		}
 	}
 
 	void AppFramework::Start()
@@ -46,4 +68,8 @@ namespace Forge
 		return server_tree_;
 	}
 
+	libvlc_instance_t * AppFramework::GetVLCInstance()
+	{
+		return vlc_ins_;
+	}
 }

@@ -25,9 +25,15 @@ class COutlookBar : public CMFCOutlookBar
 public:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 
+	afx_msg void OnMainVideo();
+	afx_msg void OnSubVideo();
+
 	void SetServerTree(CTreeCtrl* tree);
 
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	void OpenVideo(std::wstring const & wstr);
 
 protected:
 	CTreeCtrl* tree_;
