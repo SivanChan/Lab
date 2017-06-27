@@ -57,19 +57,24 @@
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
 #define IDR_MENU_TREE                   310
+#define IDD_DLG_MSG                     311
+#define IDC_EDIT1                       1001
+#define IDC_EDIT_MSG                    1001
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_SERVERTREE_32771             32771
 #define ID_SERVERTREE_32772             32772
 #define ID_SERVERTREE_MAIN_VIDEO        32773
 #define ID_SERVERTREE_SUB_VIDEO         32774
+#define ID_SERVERTREE_32775             32775
+#define ID_SERVERTREE_SNAPSHOT          32776
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        311
-#define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        313
+#define _APS_NEXT_COMMAND_VALUE         32777
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -22,6 +22,8 @@
 #include "8_monitorDoc.h"
 #include "8_monitorView.h"
 
+#include "DlgMsgBox.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -30,6 +32,7 @@
 BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
 	ON_COMMAND(ID_SERVERTREE_MAIN_VIDEO, OnMainVideo)
 	ON_COMMAND(ID_SERVERTREE_SUB_VIDEO, OnSubVideo)
+	ON_COMMAND(ID_SERVERTREE_SNAPSHOT, OnSnapShot)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
@@ -145,6 +148,25 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	//  CREATESTRUCT cs 来修改窗口类或样式
 
 	return TRUE;
+}
+
+void CMainFrame::ShowMsgBox(std::string const & msg)
+{
+	if (!msg_box_)
+		msg_box_ = std::make_shared<DlgMsgBox>();
+	if (msg_box_->GetSafeHwnd() == NULL)
+		msg_box_->Create(DlgMsgBox::IDD, this);
+	msg_box_->SetMsg(msg);
+	msg_box_->ShowWindow(SW_SHOW);
+
+	CRect rect,rc;
+	msg_box_->GetWindowRect(&rect);
+	this->GetWindowRect(&rc);
+
+	int x = rc.right - rect.Width();
+	int y = rc.bottom - rect.Height();
+	rect.MoveToXY(x, y);
+	msg_box_->MoveWindow(&rect);
 }
 
 BOOL CMainFrame::CreateDockingWindows()
@@ -412,6 +434,22 @@ void COutlookBar::OnSubVideo()
 	}
 }
 
+void COutlookBar::OnSnapShot()
+{
+	HTREEITEM ht = tree_->GetSelectedItem();
+	if (ht)
+	{
+		std::wstring wstr = tree_->GetItemText(ht).GetString();
+		std::string str, rtsp_str;
+
+		Forge::StringUtil::StringConvert(wstr, str);
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live1", str.c_str());
+		Forge::StringUtil::StringConvert(rtsp_str, wstr);
+
+		SnapShot(wstr);
+	}
+}
+
 void COutlookBar::SetServerTree(CTreeCtrl* tree)
 {
 	tree_ = tree;
@@ -454,5 +492,35 @@ void COutlookBar::OpenVideo(std::wstring const & wstr)
 		((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->SetWindowText(wstr.c_str());
 
 		((CMy8_monitorView*)((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView())->OpenVideo();
+	}
+}
+
+void COutlookBar::SnapShot(std::wstring const & wstr)
+{
+	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
+	if (pos != NULL)
+	{
+		CDocTemplate *p = AfxGetApp()->GetNextDocTemplate(pos);
+		POSITION posdoc = p->GetFirstDocPosition();
+		while (posdoc != NULL)
+		{
+			CMy8_monitorDoc* pDoc = (CMy8_monitorDoc*)p->GetNextDoc(posdoc);
+			if (pDoc != NULL)
+			{
+				if (wstr.compare(pDoc->GetTitle().GetString()) == 0)
+				{
+					POSITION posview = pDoc->GetFirstViewPosition();
+					if (posview != NULL)
+					{
+						CView* pV = pDoc->GetNextView(posview);
+						pV->GetParentFrame()->ActivateFrame();
+
+						CMy8_monitorView* pView = (CMy8_monitorView*)pV;
+						pView->CaptureVideo();
+					}
+					continue;
+				}
+			}
+		}
 	}
 }

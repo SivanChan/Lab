@@ -81,6 +81,12 @@
     <ClInclude Include="server\ServerTree.h">
       <Filter>server</Filter>
     </ClInclude>
+    <ClInclude Include="server\Util.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgMsgBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="8_monitor.cpp">
@@ -133,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="server\ServerTree.cpp">
       <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\Util.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgMsgBox.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

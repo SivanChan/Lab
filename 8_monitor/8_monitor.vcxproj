@@ -203,6 +203,7 @@
     <ClInclude Include="8_monitorView.h" />
     <ClInclude Include="CalendarBar.h" />
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="DlgMsgBox.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="Resource.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="server\Session.h" />
     <ClInclude Include="server\Singleton.h" />
     <ClInclude Include="server\StringUtil.h" />
+    <ClInclude Include="server\Util.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -225,6 +227,7 @@
     <ClCompile Include="8_monitorView.cpp" />
     <ClCompile Include="CalendarBar.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="DlgMsgBox.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="server\Allocator.cpp" />
@@ -236,6 +239,7 @@
     <ClCompile Include="server\ServerTree.cpp" />
     <ClCompile Include="server\Session.cpp" />
     <ClCompile Include="server\StringUtil.cpp" />
+    <ClCompile Include="server\Util.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

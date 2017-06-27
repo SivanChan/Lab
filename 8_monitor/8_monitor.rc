@@ -274,6 +274,7 @@ BEGIN
     BEGIN
         MENUITEM "打开视频主码流",                     ID_SERVERTREE_MAIN_VIDEO
         MENUITEM "打开视频次码流",                     ID_SERVERTREE_SUB_VIDEO
+        MENUITEM "截图",                          ID_SERVERTREE_SNAPSHOT
     END
 END
 
@@ -315,6 +316,15 @@ BEGIN
     LTEXT           "8_monitor，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2017",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_DLG_MSG DIALOGEX 0, 0, 227, 102
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "消息"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_MSG,0,0,227,102,ES_MULTILINE | ES_READONLY
 END
 
 
@@ -372,6 +382,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 55
     END
+
+    IDD_DLG_MSG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 8
+        BOTTOMMARGIN, 95
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -382,6 +400,17 @@ END
 //
 
 IDR_RIBBON              RT_RIBBON_XML           "res\\ribbon.mfcribbon-ms"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DLG_MSG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
 
 
 /////////////////////////////////////////////////////////////////////////////

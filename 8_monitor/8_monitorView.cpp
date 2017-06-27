@@ -23,6 +23,12 @@
 #include "8_monitorView.h"
 #include <AppFramework.h>
 #include <StringUtil.h>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <Util.h>
+#include <boost/bind.hpp>
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -151,6 +157,12 @@ void CMy8_monitorView::OpenVideo()
 	std::string str;
 
 	Forge::StringUtil::StringConvert(wstr, str);
+
+	ip_port_ = str;
+	Forge::StringUtil::trim_left(ip_port_, "rtsp://");
+	Forge::StringUtil::replace2(ip_port_, ":", "_");
+	Forge::StringUtil::replace2(ip_port_, "/", "_");
+
 	if (vlc_player_ == NULL &&
 		vlc_media_ == NULL)
 	{
@@ -182,6 +194,38 @@ void CMy8_monitorView::OpenVideo()
 				libvlc_media_player_play(vlc_player_);
 			}
 		}
+	}
+}
+
+void CMy8_monitorView::CaptureVideo()
+{
+	if (vlc_player_ != NULL && vlc_media_ != NULL)
+	{
+		std::stringstream out_stream;
+		struct tm cur_tm;
+		time_t cur_time;
+
+		time(&cur_time);
+		localtime_s(&cur_tm, &cur_time);
+		out_stream.clear();
+		out_stream.str() = "";
+		out_stream 
+			<< cur_tm.tm_year + 1900
+			<< std::setw(2) << std::setfill('0') << cur_tm.tm_mon + 1
+			<< std::setw(2) << std::setfill('0') << cur_tm.tm_mday
+			<< std::setw(2) << std::setfill('0') << cur_tm.tm_hour
+			<< std::setw(2) << std::setfill('0') << cur_tm.tm_min
+			<< std::setw(2) << std::setfill('0') << cur_tm.tm_sec
+			<< "_" << ip_port_.c_str();
+
+		path_ = Forge::StringUtil::format("%s\\snapshot\\%s.png", Forge::GetExeDirectory().c_str(), out_stream.str().c_str());
+		std::shared_ptr<std::thread> thd = std::make_shared<std::thread>([this](){ libvlc_video_take_snapshot(vlc_player_, 0, path_.c_str(), 0, 0); });
+		thd->join();
+
+		std::string msg = Forge::StringUtil::format("Snapshot:%s", path_.c_str());
+		Forge::Log::Instance().LogMessage(msg);
+
+		((CMainFrame*)AfxGetMainWnd())->ShowMsgBox(msg);
 	}
 }
 
