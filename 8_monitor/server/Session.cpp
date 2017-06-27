@@ -91,14 +91,33 @@ namespace Forge
 				if (root != NULL)
 				{
 					rapidxml::xml_node<char>* body = root->first_node("MessageBody");
-					if (body)
+					rapidxml::xml_attribute<char> * att = NULL;
+					if (body != NULL) 
+						att = body->first_attribute("Type");
+					if (att != NULL)
 					{
-						rapidxml::xml_attribute<char> * att = body->first_attribute("Type");
-						if (att != NULL && std::string(att->value()).compare("HeartBeat") == 0)
+// 						if (att != NULL && std::string(att->value()).compare("HeartBeat") == 0)
+// 						{
+// 							DoHeartBeat();
+// 							read_header = false;
+// 						}
+						if (std::string(att->value()).compare("HeartBeat") == 0)         // HeartBeat
 						{
 							DoHeartBeat();
 							read_header = false;
 						}
+// 						else if (std::string(att->value()).compare("TrafficAlert") == 0) // TrafficAlert
+// 						{
+// 
+// 						}
+// 						else if (std::string(att->value()).compare("HeartBeat") == 0)    // AbnormalObjAlert
+// 						{
+// 
+// 						}
+// 						else
+// 						{
+// 
+// 						}
 					}
 				}
 
