@@ -21,6 +21,11 @@
 #include <StringUtil.h>
 #include "8_monitorDoc.h"
 #include "8_monitorView.h"
+#include <StringUtil.h>
+#include <iomanip>
+#include <Windows.h>
+#include <sstream>
+#include <iostream>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -30,6 +35,7 @@
 BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
 	ON_COMMAND(ID_SERVERTREE_MAIN_VIDEO, OnMainVideo)
 	ON_COMMAND(ID_SERVERTREE_SUB_VIDEO, OnSubVideo)
+	ON_COMMAND(ID_SERVERTREE_SNAPSHOT, OnSnapshot)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
@@ -412,12 +418,27 @@ void COutlookBar::OnSubVideo()
 	}
 }
 
+void COutlookBar::OnSnapshot()
+{
+	HTREEITEM ht = tree_->GetSelectedItem();
+	if (ht)
+	{
+		std::wstring wstr = tree_->GetItemText(ht).GetString();
+		std::string str, rtsp_str;
+
+		Forge::StringUtil::StringConvert(wstr, str);
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", str.c_str());
+		Forge::StringUtil::StringConvert(rtsp_str, wstr);
+		Snapshot(wstr);
+	}
+}
+
 void COutlookBar::SetServerTree(CTreeCtrl* tree)
 {
 	tree_ = tree;
 }
 
-void COutlookBar::OpenVideo(std::wstring const & wstr)
+CView* COutlookBar::OpenVideo(std::wstring const & wstr)
 {
 	bool find = false;
 
@@ -440,6 +461,7 @@ void COutlookBar::OpenVideo(std::wstring const & wstr)
 					{
 						CView* pV = pDoc->GetNextView(posview);
 						pV->GetParentFrame()->ActivateFrame();
+						return pV;
 					}
 					continue;
 				}
@@ -452,7 +474,40 @@ void COutlookBar::OpenVideo(std::wstring const & wstr)
 		AfxGetMainWnd()->SendMessage(WM_COMMAND, MAKEWPARAM(ID_FILE_NEW, 0), 0);
 		((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView()->GetDocument()->SetTitle(wstr.c_str());
 		((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->SetWindowText(wstr.c_str());
-
-		((CMy8_monitorView*)((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView())->OpenVideo();
+		CMy8_monitorView* pView = (CMy8_monitorView*)((CMainFrame*)AfxGetMainWnd())->MDIGetActive()->GetActiveView();
+		pView->OpenVideo();
+		return pView;
 	}
+	return NULL;
+}
+
+void COutlookBar::Snapshot(std::wstring const & wstr)
+{
+	std::string rtsp_str;
+	Forge::StringUtil::StringConvert(wstr, rtsp_str);
+
+	Forge::StringUtil::trim_left(rtsp_str, "rtsp://");
+	Forge::StringUtil::replace2(rtsp_str, ":", "_");
+	Forge::StringUtil::replace2(rtsp_str, "/", "_");
+
+	std::stringstream out_stream;
+	struct tm cur_tm;
+	time_t cur_time;
+
+	time(&cur_time);
+	localtime_s(&cur_tm, &cur_time);
+	out_stream.clear();
+	out_stream.str() = "";
+	out_stream
+		<< cur_tm.tm_year + 1900
+		<< std::setw(2) << std::setfill('0') << cur_tm.tm_mon + 1
+		<< std::setw(2) << std::setfill('0') << cur_tm.tm_mday
+		<< std::setw(2) << std::setfill('0') << cur_tm.tm_hour
+		<< std::setw(2) << std::setfill('0') << cur_tm.tm_min
+		<< std::setw(2) << std::setfill('0') << cur_tm.tm_sec
+		<< "_" << rtsp_str.c_str() << ".png";
+
+	CMy8_monitorView* pView = (CMy8_monitorView*)OpenVideo(wstr);
+	if (pView)
+		pView->Snapshot(out_stream.str());
 }

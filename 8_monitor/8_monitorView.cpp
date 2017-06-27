@@ -185,6 +185,17 @@ void CMy8_monitorView::OpenVideo()
 	}
 }
 
+bool CMy8_monitorView::Snapshot(std::string const & file_path)
+{
+	if (vlc_player_ != NULL && vlc_media_ != NULL)
+	{
+		std::shared_ptr<std::thread> thd = std::make_shared<std::thread>([&]() { libvlc_video_take_snapshot(vlc_player_, 0, file_path.c_str(), 0, 0); });
+		thd->join();
+		return true;
+	}
+	return false;
+}
+
 #endif //_DEBUG
 
 

@@ -272,8 +272,8 @@ IDR_MENU_TREE MENU
 BEGIN
     POPUP "ServerTree"
     BEGIN
-        MENUITEM "打开视频主码流",                     ID_SERVERTREE_MAIN_VIDEO
-        MENUITEM "打开视频次码流",                     ID_SERVERTREE_SUB_VIDEO
+        MENUITEM "打开视频",                        ID_SERVERTREE_SUB_VIDEO
+        MENUITEM "视频截图",                        ID_SERVERTREE_SNAPSHOT
     END
 END
 

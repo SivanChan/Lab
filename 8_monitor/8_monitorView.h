@@ -29,6 +29,7 @@ public:
 // ²Ù×÷
 public:
 	void OpenVideo();
+	bool Snapshot(std::string const & file_path);
 
 // ÖØÐ´
 public:

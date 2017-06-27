@@ -27,13 +27,15 @@ public:
 
 	afx_msg void OnMainVideo();
 	afx_msg void OnSubVideo();
+	afx_msg void OnSnapshot();
 
 	void SetServerTree(CTreeCtrl* tree);
 
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	void OpenVideo(std::wstring const & wstr);
+	CView* OpenVideo(std::wstring const & wstr);
+	void Snapshot(std::wstring const & wstr);
 
 protected:
 	CTreeCtrl* tree_;
