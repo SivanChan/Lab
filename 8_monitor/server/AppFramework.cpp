@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include <AppFramework.h>
 #include <fstream>
+#include <Util.h>
+#include <StringUtil.h>
 
 #pragma comment(lib, "libvlc.lib")
 #pragma comment(lib, "libvlccore.lib")
@@ -26,7 +28,9 @@ namespace Forge
 		log_->Add(std::make_shared<DebugOutputter>());
 #endif
 		//log_->Add(std::make_shared<CoutOutputter>());
-		log_->Add(std::make_shared<FileOutputter>("log.txt"));
+
+		std::string path = StringUtil::format("%s\\log.txt", GetExeDirectory().c_str());
+		log_->Add(std::make_shared<FileOutputter>(path));
 
 		const char * vlc_args[] =
 		{

@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include <ServerTree.h>
 #include <StringUtil.h>
+#include <Util.h>
 
 namespace Forge
 {
@@ -51,7 +52,9 @@ namespace Forge
 	{
 		root_client_item_ = tree_.InsertItem(L"Client");
 		root_camera_item_ = tree_.InsertItem(L"Camera");
-		std::ifstream in_file("camera_list.txt");
+
+		std::string path = StringUtil::format("%s\\camera_list.txt", GetExeDirectory().c_str());
+		std::ifstream in_file(path.c_str());
 		std::string line_str;
 		std::wstring wstr;
 
