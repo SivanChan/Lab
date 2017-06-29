@@ -17,6 +17,8 @@
 #include "CalendarBar.h"
 #include "Resource.h"
 
+class DlgMsgBox;
+
 class COutlookBar : public CMFCOutlookBar
 {
 	virtual BOOL AllowShowOnPaneMenu() const { return TRUE; }
@@ -30,12 +32,13 @@ public:
 	afx_msg void OnSnapshot();
 
 	void SetServerTree(CTreeCtrl* tree);
+	std::string Snapshot(std::wstring const & wstr);
 
 	DECLARE_MESSAGE_MAP()
 
 protected:
 	CView* OpenVideo(std::wstring const & wstr);
-	void Snapshot(std::wstring const & wstr);
+	
 
 protected:
 	CTreeCtrl* tree_;
@@ -52,6 +55,8 @@ public:
 
 // ²Ù×÷
 public:
+	afx_msg LRESULT OnThreadMessage(WPARAM, LPARAM);
+	void ShowMsgBox(std::string const & msg);
 
 // ÖØÐ´
 public:
@@ -93,6 +98,8 @@ protected:
 	CMFCOutlookBarTabCtrl* FindOutlookParent(CWnd* pWnd);
 	CMFCOutlookBarTabCtrl* m_pCurrOutlookWnd;
 	CMFCOutlookBarPane*    m_pCurrOutlookPage;
+
+	std::shared_ptr<DlgMsgBox> msg_box_;
 };
 
 

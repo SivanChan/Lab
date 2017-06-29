@@ -26,6 +26,9 @@
 #include <Windows.h>
 #include <sstream>
 #include <iostream>
+#include <Util.h>
+
+#include "DlgMsgBox.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,6 +45,8 @@ END_MESSAGE_MAP()
 
 // CMainFrame
 
+static const UINT THREAD_MSG = ::RegisterWindowMessage(_T("THREAD_MSG"));
+
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
@@ -50,6 +55,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_REGISTERED_MESSAGE(THREAD_MSG, &CMainFrame::OnThreadMessage)
 END_MESSAGE_MAP()
 
 // CMainFrame 构造/析构
@@ -58,6 +64,52 @@ CMainFrame::CMainFrame()
 {
 	// TODO: 在此添加成员初始化代码
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_BLUE);
+}
+
+LRESULT CMainFrame::OnThreadMessage(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam == 1)
+	{
+		std::string ip = (char*)lParam;
+		std::string rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", ip.c_str());
+		std::wstring wstr;
+
+		Forge::StringUtil::StringConvert(rtsp_str, wstr);
+		std::string path = m_wndNavigationBar.Snapshot(wstr);
+
+		std::stringstream out_stream;
+		out_stream << "类型 - 周界报警\r\n"
+			<< "相机 - " << ip.c_str() << "\r\n\r\n"
+			<< "内容 - " << "\r\n"
+			<< "截图 - " << path.c_str();
+
+		ShowMsgBox(out_stream.str());
+	} 
+	else
+	{
+
+	}
+
+	return 1;
+}
+
+void CMainFrame::ShowMsgBox(std::string const & msg)
+{
+	if (!msg_box_)
+		msg_box_ = std::make_shared<DlgMsgBox>();
+	if (msg_box_->GetSafeHwnd() == NULL)
+		msg_box_->Create(DlgMsgBox::IDD, this);
+	msg_box_->SetMsg(msg);
+	msg_box_->ShowWindow(SW_SHOW);
+
+	CRect rect, rc;
+	msg_box_->GetWindowRect(&rect);
+	this->GetWindowRect(&rc);
+
+	int x = rc.right - rect.Width();
+	int y = rc.bottom - rect.Height();
+	rect.MoveToXY(x, y);
+	msg_box_->MoveWindow(&rect);
 }
 
 CMainFrame::~CMainFrame()
@@ -139,6 +191,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// 将文档名和应用程序名称在窗口标题栏上的顺序进行交换。这
 	// 将改进任务栏的可用性，因为显示的文档名带有缩略图。
 	ModifyStyle(0, FWS_PREFIXTITLE);
+
+	Forge::AppFramework::Instance().SetMessageID(THREAD_MSG);
+	Forge::AppFramework::Instance().SetWnd(GetSafeHwnd());
 
 	return 0;
 }
@@ -481,7 +536,7 @@ CView* COutlookBar::OpenVideo(std::wstring const & wstr)
 	return NULL;
 }
 
-void COutlookBar::Snapshot(std::wstring const & wstr)
+std::string COutlookBar::Snapshot(std::wstring const & wstr)
 {
 	std::string rtsp_str;
 	Forge::StringUtil::StringConvert(wstr, rtsp_str);
@@ -489,6 +544,7 @@ void COutlookBar::Snapshot(std::wstring const & wstr)
 	Forge::StringUtil::trim_left(rtsp_str, "rtsp://");
 	Forge::StringUtil::replace2(rtsp_str, ":", "_");
 	Forge::StringUtil::replace2(rtsp_str, "/", "_");
+	Forge::StringUtil::replace2(rtsp_str, ".", "_");
 
 	std::stringstream out_stream;
 	struct tm cur_tm;
@@ -498,7 +554,7 @@ void COutlookBar::Snapshot(std::wstring const & wstr)
 	localtime_s(&cur_tm, &cur_time);
 	out_stream.clear();
 	out_stream.str() = "";
-	out_stream
+	out_stream << Forge::GetExeDirectory().c_str() << "\\snapshot\\"
 		<< cur_tm.tm_year + 1900
 		<< std::setw(2) << std::setfill('0') << cur_tm.tm_mon + 1
 		<< std::setw(2) << std::setfill('0') << cur_tm.tm_mday
@@ -510,4 +566,5 @@ void COutlookBar::Snapshot(std::wstring const & wstr)
 	CMy8_monitorView* pView = (CMy8_monitorView*)OpenVideo(wstr);
 	if (pView)
 		pView->Snapshot(out_stream.str());
+	return out_stream.str();
 }

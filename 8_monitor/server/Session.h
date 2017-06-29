@@ -30,6 +30,7 @@ namespace Forge
 
 	protected:
 		boost::asio::ip::tcp::socket socket_;
+		std::string ip_;
 		std::string ip_port_;
 		std::string buffer_;
 		uint32_t const header_size_;

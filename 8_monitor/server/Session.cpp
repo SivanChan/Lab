@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <AppFramework.h>
+#include "../MainFrm.h"
 
 namespace Forge
 {
@@ -17,6 +18,7 @@ namespace Forge
 		header_size_(sizeof(uint8_t) + sizeof(uint32_t)),
 		timer_(socket_.get_io_service())
 	{
+		ip_ = socket_.remote_endpoint().address().to_string();
 		ip_port_ = StringUtil::format("%s:%d", socket_.remote_endpoint().address().to_string().c_str(),
 			socket_.remote_endpoint().port());
 		std::string str = StringUtil::format("%s connected!", ip_port_.c_str());
@@ -96,34 +98,32 @@ namespace Forge
 						att = body->first_attribute("Type");
 					if (att != NULL)
 					{
-// 						if (att != NULL && std::string(att->value()).compare("HeartBeat") == 0)
-// 						{
-// 							DoHeartBeat();
-// 							read_header = false;
-// 						}
 						if (std::string(att->value()).compare("HeartBeat") == 0)         // HeartBeat
 						{
 							DoHeartBeat();
 							read_header = false;
 						}
-// 						else if (std::string(att->value()).compare("TrafficAlert") == 0) // TrafficAlert
-// 						{
-// 
-// 						}
-// 						else if (std::string(att->value()).compare("HeartBeat") == 0)    // AbnormalObjAlert
-// 						{
-// 
-// 						}
-// 						else
-// 						{
-// 
-// 						}
+						else if (std::string(att->value()).compare("TrafficAlert") == 0) // TrafficAlert
+						{
+							// 线程消息，截图，周界报警
+							Log::Instance().LogMessage("周界报警！");
+							SendMessage(AppFramework::Instance().GetWnd(), AppFramework::Instance().GetMessageID(), 1, (LPARAM)ip_.c_str());
+						}
+						else if (std::string(att->value()).compare("AbnormalObjAlert") == 0)    // AbnormalObjAlert
+						{
+							// 线程消息，截图，异物报警
+							
+						}
+						else
+						{
+
+						}
 					}
 				}
 
 				if (read_header)
 				{
-					Log::Instance().LogMessage(msg.GetXML());
+					//Log::Instance().LogMessage(msg.GetXML());
 					DoReadHeader();
 				}
 			}

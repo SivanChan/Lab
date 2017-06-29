@@ -21,7 +21,9 @@ namespace Forge
 	AppFramework::AppFramework()
 		: port_(20001),
 		server_(io_service_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)),
-		vlc_ins_(NULL)
+		vlc_ins_(NULL),
+		message_id_(0),
+		hwnd_(NULL)
 	{
 		log_ = std::make_shared<Log>();
 #ifdef _DEBUG
@@ -75,5 +77,25 @@ namespace Forge
 	libvlc_instance_t * AppFramework::GetVLCInstance()
 	{
 		return vlc_ins_;
+	}
+
+	void AppFramework::SetMessageID(UINT id)
+	{
+		message_id_ = id;
+	}
+
+	UINT AppFramework::GetMessageID() const
+	{
+		return message_id_;
+	}
+
+	void AppFramework::SetWnd(HWND hWnd)
+	{
+		hwnd_ = hWnd;
+	}
+
+	HWND AppFramework::GetWnd() const
+	{
+		return hwnd_;
 	}
 }

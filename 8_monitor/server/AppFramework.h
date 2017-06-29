@@ -28,6 +28,12 @@ namespace Forge
 
 		libvlc_instance_t * GetVLCInstance();
 
+		void SetMessageID(UINT id);
+		UINT GetMessageID() const;
+
+		void SetWnd(HWND hWnd);
+		HWND GetWnd() const;
+
 	protected:
 		uint16_t port_;
 		boost::asio::io_service io_service_;
@@ -35,6 +41,8 @@ namespace Forge
 		LogPtr log_;
 		std::shared_ptr<ServerTree> server_tree_;
 		libvlc_instance_t *     vlc_ins_;
+		UINT                    message_id_;
+		HWND                    hwnd_;
 	};
 	typedef std::shared_ptr<AppFramework> AppFrameworkPtr;
 }

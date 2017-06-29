@@ -57,6 +57,8 @@
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
 #define IDR_MENU_TREE                   310
+#define IDC_EDIT_MSG                    311
+#define IDD_DLG_MSG                     312
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_SERVERTREE_32771             32771
 #define ID_SERVERTREE_32772             32772
