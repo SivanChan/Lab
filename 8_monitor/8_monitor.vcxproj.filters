@@ -16,6 +16,9 @@
     <Filter Include="server">
       <UniqueIdentifier>{5b7f86e3-4b30-4b54-987b-1fe410cae116}</UniqueIdentifier>
     </Filter>
+    <Filter Include="zmq">
+      <UniqueIdentifier>{9eb1c474-fee8-443c-8220-e9c5ee86428c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -87,6 +90,9 @@
     <ClInclude Include="DlgMsgBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="zmq\MessageQueue.h">
+      <Filter>zmq</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="8_monitor.cpp">
@@ -145,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="DlgMsgBox.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="zmq\MessageQueue.cpp">
+      <Filter>zmq</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

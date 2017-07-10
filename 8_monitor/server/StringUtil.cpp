@@ -127,7 +127,29 @@ int StringUtil::collate_no_case( std::string const & lhs, std::string const & rh
 	return lhs_copy.compare(rhs_copy);
 }
 
-void StringUtil::replace2( std::string & source_str, std::string const & what, std::string const & replaced_what )
+std::string StringUtil::gbk_to_utf8(const char* gbk)
+{
+	if (gbk == NULL)
+		return "";
+
+	wchar_t* widechar = NULL;
+	char* multibyte = NULL;
+	int length = 0;
+	length = ::MultiByteToWideChar(CP_ACP, 0, gbk, -1, NULL, 0);
+	if (length <= 0) return "";
+	widechar = new wchar_t[length];
+	::MultiByteToWideChar(CP_ACP, 0, gbk, -1, widechar, length);
+	length = ::WideCharToMultiByte(CP_UTF8, 0, widechar, -1, NULL, 0, NULL, NULL);
+	if (length <= 0) { delete[] widechar; return ""; }
+	multibyte = new char[length];
+	::WideCharToMultiByte(CP_UTF8, 0, widechar, -1, multibyte, length, NULL, NULL);
+	delete[] widechar;
+	std::string utf8(multibyte);
+	delete[] multibyte;
+	return utf8;
+}
+
+void StringUtil::replace2(std::string & source_str, std::string const & what, std::string const & replaced_what)
 {
 	std::string::size_type pos = 0;
 	while(true)

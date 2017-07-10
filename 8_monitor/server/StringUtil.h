@@ -79,6 +79,11 @@ public:
 
 	static std::string & StringUtil::StringConvert(std::wstring const & src, std::string & dest);
 	static std::wstring & StringUtil::StringConvert(std::string const & src, std::wstring & dest);
+
+	/**
+		gbk2utf8
+	*/
+	static std::string gbk_to_utf8(const char* gbk);
 };
 }
 #endif // StringUtil_h__

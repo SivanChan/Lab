@@ -127,7 +127,6 @@ void CMy8_monitorView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 
 
 // CMy8_monitorView 诊断
-
 #ifdef _DEBUG
 void CMy8_monitorView::AssertValid() const
 {
@@ -138,6 +137,7 @@ void CMy8_monitorView::Dump(CDumpContext& dc) const
 {
 	CView::Dump(dc);
 }
+#endif
 
 CMy8_monitorDoc* CMy8_monitorView::GetDocument() const // 非调试版本是内联的
 {
@@ -189,14 +189,14 @@ bool CMy8_monitorView::Snapshot(std::string const & file_path)
 {
 	if (vlc_player_ != NULL && vlc_media_ != NULL)
 	{
-		std::shared_ptr<std::thread> thd = std::make_shared<std::thread>([&]() { libvlc_video_take_snapshot(vlc_player_, 0, file_path.c_str(), 0, 0); });
+		std::string utf8_file_path = Forge::StringUtil::gbk_to_utf8(file_path.c_str());
+		std::shared_ptr<std::thread> thd = std::make_shared<std::thread>([&]() { libvlc_video_take_snapshot(vlc_player_, 0, utf8_file_path.c_str(), 0, 0); });
 		thd->join();
 		return true;
 	}
 	return false;
 }
 
-#endif //_DEBUG
 
 
 // CMy8_monitorView 消息处理程序

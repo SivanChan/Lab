@@ -63,7 +63,7 @@ protected:
 };
 
 #ifndef _DEBUG  // 8_monitorView.cpp 中的调试版本
-inline CMy8_monitorDoc* CMy8_monitorView::GetDocument() const
-   { return reinterpret_cast<CMy8_monitorDoc*>(m_pDocument); }
+// inline CMy8_monitorDoc* CMy8_monitorView::GetDocument() const
+//    { return reinterpret_cast<CMy8_monitorDoc*>(m_pDocument); }
 #endif
 
