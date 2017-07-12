@@ -25,7 +25,6 @@ namespace Forge
 		HTREEITEM root_client_item_;
 		HTREEITEM root_camera_item_;
 		std::map<Session*, HTREEITEM> data_;
-		std::vector<std::string> camera_list_;
 	};
 }
 

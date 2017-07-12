@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<terminal_id>{192.168.0.114.orz.ec-88-8f-bd-9a-db-40-61-86-76-c3-79-00-50-56-c0-00-01-00-50-56-c0-00-08}0b2cb2f3fcfcf44ece08a94cc4d85d56</terminal_id>
+	<cameras port="6554" sub_add="live2">
+		<ip>192.168.1.223</ip>
+	</cameras>
+	<zmq>
+		<ip>localhost</ip>
+		<port>1984</port>
+	</zmq>
+</config>

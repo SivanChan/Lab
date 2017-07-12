@@ -3,6 +3,7 @@
 #include <ServerTree.h>
 #include <StringUtil.h>
 #include <Util.h>
+#include <AppFramework.h>
 
 namespace Forge
 {
@@ -53,29 +54,15 @@ namespace Forge
 		root_client_item_ = tree_.InsertItem(L"Client");
 		root_camera_item_ = tree_.InsertItem(L"Camera");
 
-		std::string path = StringUtil::format("%s\\camera_list.txt", GetExeDirectory().c_str());
-		std::ifstream in_file(path.c_str());
-		std::string line_str;
 		std::wstring wstr;
-
-		if (in_file.is_open())
+		std::vector<std::string> const & ips = AppFramework::Instance().GetAppConfig().ips;
+		for (auto const & ip : ips)
 		{
-			std::getline(in_file, line_str);
-			while (!line_str.empty())
-			{
-				camera_list_.push_back(line_str);
-				StringUtil::StringConvert(line_str, wstr);
-				HTREEITEM ht = tree_.InsertItem(wstr.c_str(), root_camera_item_);
-
-				if (ht)
-					tree_.SetItemData(ht, (DWORD_PTR)camera_list_.back().data());
-
-				line_str.clear();
-				std::getline(in_file, line_str);
-			}
-			in_file.close();
+			StringUtil::StringConvert(ip, wstr);
+			HTREEITEM ht = tree_.InsertItem(wstr.c_str(), root_camera_item_);
+			if (ht)
+			 	tree_.SetItemData(ht, (DWORD_PTR)ip.data());
 		}
-
 		tree_.Expand(root_camera_item_, TVE_EXPAND);
 	}
 }

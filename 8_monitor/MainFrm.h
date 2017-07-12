@@ -26,8 +26,6 @@ class COutlookBar : public CMFCOutlookBar
 
 public:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-
-	afx_msg void OnMainVideo();
 	afx_msg void OnSubVideo();
 	afx_msg void OnSnapshot();
 

@@ -36,7 +36,6 @@
 
 
 BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
-	ON_COMMAND(ID_SERVERTREE_MAIN_VIDEO, OnMainVideo)
 	ON_COMMAND(ID_SERVERTREE_SUB_VIDEO, OnSubVideo)
 	ON_COMMAND(ID_SERVERTREE_SNAPSHOT, OnSnapshot)
 	ON_WM_CONTEXTMENU()
@@ -71,7 +70,7 @@ LRESULT CMainFrame::OnThreadMessage(WPARAM wParam, LPARAM lParam)
 	if (wParam == 1)
 	{
 		std::string ip = (char*)lParam;
-		std::string rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", ip.c_str());
+		std::string rtsp_str = Forge::StringUtil::format("rtsp://%s:%d/%s", ip.c_str(), Forge::AppFramework::Instance().GetAppConfig().camera_port, Forge::AppFramework::Instance().GetAppConfig().camera_sub_add.c_str());
 		std::wstring wstr;
 
 		Forge::StringUtil::StringConvert(rtsp_str, wstr);
@@ -441,22 +440,6 @@ void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
 	CMFCOutlookBar::OnContextMenu(pWnd,point);
 }
 
-void COutlookBar::OnMainVideo()
-{
-	HTREEITEM ht = tree_->GetSelectedItem();
-	if (ht)
-	{
-		std::wstring wstr = tree_->GetItemText(ht).GetString();
-		std::string str, rtsp_str;
-
-		Forge::StringUtil::StringConvert(wstr,str);
-		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live1",str.c_str());
-		Forge::StringUtil::StringConvert(rtsp_str,wstr);
-		
-		OpenVideo(wstr);
-	}
-}
-
 void COutlookBar::OnSubVideo()
 {
 	HTREEITEM ht = tree_->GetSelectedItem();
@@ -466,7 +449,7 @@ void COutlookBar::OnSubVideo()
 		std::string str, rtsp_str;
 
 		Forge::StringUtil::StringConvert(wstr, str);
-		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", str.c_str());
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:%d/%s", str.c_str(), Forge::AppFramework::Instance().GetAppConfig().camera_port, Forge::AppFramework::Instance().GetAppConfig().camera_sub_add.c_str());
 		Forge::StringUtil::StringConvert(rtsp_str, wstr);
 		
 		OpenVideo(wstr);
@@ -482,7 +465,7 @@ void COutlookBar::OnSnapshot()
 		std::string str, rtsp_str;
 
 		Forge::StringUtil::StringConvert(wstr, str);
-		rtsp_str = Forge::StringUtil::format("rtsp://%s:6554/live2", str.c_str());
+		rtsp_str = Forge::StringUtil::format("rtsp://%s:%d/%s", str.c_str(), Forge::AppFramework::Instance().GetAppConfig().camera_port, Forge::AppFramework::Instance().GetAppConfig().camera_sub_add.c_str());
 		Forge::StringUtil::StringConvert(rtsp_str, wstr);
 		Snapshot(wstr);
 	}

@@ -93,6 +93,9 @@
     <ClInclude Include="zmq\MessageQueue.h">
       <Filter>zmq</Filter>
     </ClInclude>
+    <ClInclude Include="zmq\Block.h">
+      <Filter>zmq</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="8_monitor.cpp">
@@ -224,5 +227,10 @@
     <None Include="res\My8_monitor.rc2">
       <Filter>资源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml">
+      <Filter>源文件</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

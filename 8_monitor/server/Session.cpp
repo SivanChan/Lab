@@ -10,6 +10,7 @@
 #include <iostream>
 #include <AppFramework.h>
 #include "../MainFrm.h"
+#include "../zmq/MessageQueue.h"
 
 namespace Forge
 {
@@ -108,11 +109,20 @@ namespace Forge
 							// 线程消息，截图，周界报警
 							Log::Instance().LogMessage("周界报警！");
 							SendMessage(AppFramework::Instance().GetWnd(), AppFramework::Instance().GetMessageID(), 1, (LPARAM)ip_.c_str());
+
+							// 发送zmq消息
+							std::string msg = "{\"type\":\"周界报警\",\"service_id\":\"menu.menu_state\", \"terminal_id\":\"{192.168.0.114.orz.ec-88-8f-bd-9a-db-40-61-86-76-c3-79-00-50-56-c0-00-01-00-50-56-c0-00-08}0b2cb2f3fcfcf44ece08a94cc4d85d56\"}";
+							AppFramework::Instance().GetMessageQueue()->AddMessage(msg);
 						}
 						else if (std::string(att->value()).compare("AbnormalObjAlert") == 0)    // AbnormalObjAlert
 						{
-							// 线程消息，截图，异物报警
-							
+							// 线程消息，截图，周界报警
+							Log::Instance().LogMessage("异物报警！");
+							SendMessage(AppFramework::Instance().GetWnd(), AppFramework::Instance().GetMessageID(), 1, (LPARAM)ip_.c_str());
+
+							// 发送zmq消息
+							std::string msg = "{\"type\":\"异物报警\",\"service_id\":\"menu.menu_state\", \"terminal_id\":\"{192.168.0.114.orz.ec-88-8f-bd-9a-db-40-61-86-76-c3-79-00-50-56-c0-00-01-00-50-56-c0-00-08}0b2cb2f3fcfcf44ece08a94cc4d85d56\"}";
+							AppFramework::Instance().GetMessageQueue()->AddMessage(msg);
 						}
 						else
 						{
