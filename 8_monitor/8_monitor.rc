@@ -277,6 +277,14 @@ BEGIN
     END
 END
 
+IDR_MENU_CAMERA MENU
+BEGIN
+    POPUP "Camera"
+    BEGIN
+        MENUITEM "监控模式(&M)",                    ID_CAMERA_MONITOR_MODE
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -324,6 +332,13 @@ CAPTION "消息"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     EDITTEXT        IDC_EDIT_MSG,0,0,234,137,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY
+END
+
+IDD_DLG_VIDEO DIALOGEX 0, 0, 313, 94
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP
+EXSTYLE WS_EX_TOPMOST | WS_EX_TOOLWINDOW
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
 END
 
 
@@ -389,6 +404,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 130
     END
+
+    IDD_DLG_VIDEO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 306
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -407,6 +430,11 @@ IDR_RIBBON              RT_RIBBON_XML           "res\\ribbon.mfcribbon-ms"
 //
 
 IDD_DLG_MSG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DLG_VIDEO AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

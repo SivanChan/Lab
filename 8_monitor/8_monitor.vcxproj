@@ -204,6 +204,7 @@
     <ClInclude Include="CalendarBar.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="DlgMsgBox.h" />
+    <ClInclude Include="DlgVideo.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="Resource.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="CalendarBar.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="DlgMsgBox.cpp" />
+    <ClCompile Include="DlgVideo.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="server\Allocator.cpp" />

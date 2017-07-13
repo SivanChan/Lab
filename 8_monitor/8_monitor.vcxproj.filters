@@ -96,6 +96,9 @@
     <ClInclude Include="zmq\Block.h">
       <Filter>zmq</Filter>
     </ClInclude>
+    <ClInclude Include="DlgVideo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="8_monitor.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="zmq\MessageQueue.cpp">
       <Filter>zmq</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgVideo.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

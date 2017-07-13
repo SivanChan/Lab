@@ -25,6 +25,13 @@ namespace Forge
 		std::vector<std::string> ips;
 		std::string zmq_ip;
 		uint32_t    zmq_port;
+
+		uint32_t video_width;
+		uint32_t video_height;
+
+		AppConfig() : video_width(300), video_height(200)
+		{
+		}
 	};
 
 	class Block;

@@ -18,6 +18,7 @@
 #include "Resource.h"
 
 class DlgMsgBox;
+class DlgVideo;
 
 class COutlookBar : public CMFCOutlookBar
 {
@@ -28,6 +29,7 @@ public:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnSubVideo();
 	afx_msg void OnSnapshot();
+	afx_msg void OnMonitorMode();
 
 	void SetServerTree(CTreeCtrl* tree);
 	std::string Snapshot(std::wstring const & wstr);
@@ -55,6 +57,8 @@ public:
 public:
 	afx_msg LRESULT OnThreadMessage(WPARAM, LPARAM);
 	void ShowMsgBox(std::string const & msg);
+
+	void DoMonitorMode(bool monitor_mode);
 
 // ÖØÐ´
 public:
@@ -85,6 +89,7 @@ protected:
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+	afx_msg LRESULT OnClickTray(WPARAM wParam, LPARAM IParam);
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();
@@ -98,6 +103,12 @@ protected:
 	CMFCOutlookBarPane*    m_pCurrOutlookPage;
 
 	std::shared_ptr<DlgMsgBox> msg_box_;
+	std::shared_ptr<DlgVideo>  video_dlg_;
+
+	NOTIFYICONDATA notify_icon_;
+	bool monitor_mode_;
+public:
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 };
 
 

@@ -29,6 +29,7 @@
 #include <Util.h>
 
 #include "DlgMsgBox.h"
+#include "DlgVideo.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -38,12 +39,13 @@
 BEGIN_MESSAGE_MAP(COutlookBar, CMFCOutlookBar)
 	ON_COMMAND(ID_SERVERTREE_SUB_VIDEO, OnSubVideo)
 	ON_COMMAND(ID_SERVERTREE_SNAPSHOT, OnSnapshot)
+	ON_COMMAND(ID_CAMERA_MONITOR_MODE, OnMonitorMode)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
 
 // CMainFrame
-
+#define WM_CLICK_TRAY (WM_USER+001)
 static const UINT THREAD_MSG = ::RegisterWindowMessage(_T("THREAD_MSG"));
 
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
@@ -55,11 +57,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
 	ON_REGISTERED_MESSAGE(THREAD_MSG, &CMainFrame::OnThreadMessage)
+	ON_MESSAGE(WM_CLICK_TRAY, &CMainFrame::OnClickTray)
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 // CMainFrame 构造/析构
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : monitor_mode_(false)
 {
 	// TODO: 在此添加成员初始化代码
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_BLUE);
@@ -103,12 +107,44 @@ void CMainFrame::ShowMsgBox(std::string const & msg)
 
 	CRect rect, rc;
 	msg_box_->GetWindowRect(&rect);
-	this->GetWindowRect(&rc);
+	GetDesktopWindow()->GetWindowRect(&rc);
 
 	int x = rc.right - rect.Width();
 	int y = rc.bottom - rect.Height();
+	y -= 30;
 	rect.MoveToXY(x, y);
 	msg_box_->MoveWindow(&rect);
+}
+
+void CMainFrame::DoMonitorMode(bool monitor_mode)
+{
+	if (monitor_mode_ != monitor_mode)
+	{
+		monitor_mode_ = monitor_mode;
+
+		if (monitor_mode_)
+		{
+			if (!video_dlg_)
+				video_dlg_ = std::make_shared<DlgVideo>();
+			if (video_dlg_->GetSafeHwnd() == NULL)
+				video_dlg_->Create(DlgVideo::IDD, this);
+			video_dlg_->ShowWindow(SW_SHOW);
+
+			CRect rect, rc;
+			video_dlg_->GetWindowRect(&rect);
+			GetDesktopWindow()->GetWindowRect(&rc);
+
+			int x = rc.left;
+			int y = rc.bottom - rect.Height();
+			y -= 30;
+			rect.MoveToXY(x, y);
+			video_dlg_->MoveWindow(&rect);
+		}
+		else
+		{
+			video_dlg_.reset();
+		}
+	}
 }
 
 CMainFrame::~CMainFrame()
@@ -401,6 +437,17 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	m_wndOutput.UpdateFonts();
 }
 
+LRESULT CMainFrame::OnClickTray(WPARAM wParam, LPARAM IParam)
+{
+	if ((IParam == WM_LBUTTONDOWN) || (IParam == WM_RBUTTONDOWN))
+	{
+		ModifyStyleEx(0, WS_EX_TOPMOST);
+		ShowWindow(SW_SHOW);
+		DoMonitorMode(false);
+	}
+	return 0;
+}
+
 void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	if (pWnd == tree_ && pWnd != NULL)
@@ -432,6 +479,28 @@ void COutlookBar::OnContextMenu(CWnd* pWnd, CPoint point)
 
 					((CMDIFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
 					UpdateDialogControls(this, FALSE);
+				}
+			}
+			else
+			{
+				CString text = tree_->GetItemText(ht);
+				if (text.Compare(L"Camera") == 0)
+				{
+					CMenu menu;
+					menu.LoadMenu(IDR_MENU_CAMERA);
+
+					CMenu* pSumMenu = menu.GetSubMenu(0);
+
+					if (AfxGetMainWnd()->IsKindOf(RUNTIME_CLASS(CMDIFrameWndEx)))
+					{
+						CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
+
+						if (!pPopupMenu->Create(this, point.x, point.y, (HMENU)pSumMenu->m_hMenu, FALSE, TRUE))
+							return;
+
+						((CMDIFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
+						UpdateDialogControls(this, FALSE);
+					}
 				}
 			}
 		}
@@ -469,6 +538,12 @@ void COutlookBar::OnSnapshot()
 		Forge::StringUtil::StringConvert(rtsp_str, wstr);
 		Snapshot(wstr);
 	}
+}
+
+void COutlookBar::OnMonitorMode()
+{
+	((CMainFrame*)AfxGetMainWnd())->DoMonitorMode(true);
+	::SendMessage(AfxGetMainWnd()->GetSafeHwnd(), WM_SYSCOMMAND, SC_MINIMIZE, 0);
 }
 
 void COutlookBar::SetServerTree(CTreeCtrl* tree)
@@ -550,4 +625,23 @@ std::string COutlookBar::Snapshot(std::wstring const & wstr)
 	if (pView)
 		pView->Snapshot(out_stream.str());
 	return out_stream.str();
+}
+
+
+void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (nID == SC_MINIMIZE)
+	{
+		notify_icon_.cbSize = sizeof(NOTIFYICONDATA);
+		notify_icon_.hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+		notify_icon_.hWnd = m_hWnd;
+		lstrcpy(notify_icon_.szTip, L"monitor");
+		notify_icon_.uCallbackMessage = WM_CLICK_TRAY;
+		notify_icon_.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+		Shell_NotifyIcon(NIM_ADD, &notify_icon_);
+		ShowWindow(SW_HIDE);
+	}
+	else
+		CMDIFrameWndEx::OnSysCommand(nID, lParam);
 }
