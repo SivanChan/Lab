@@ -19,16 +19,12 @@ namespace Forge
 		~MessageQueue();
 
 		void Initialize(std::string const & ip, uint32_t port);
-
 		void AddMessage(std::string const & msg);
-
 		void SendFunc();
-
 		void SendMessage(std::string const & msg);
 
 	protected:
 		void Finalize();
-
 		void UpdateBlock();
 
 	private:

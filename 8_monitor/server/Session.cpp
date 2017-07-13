@@ -5,9 +5,11 @@
 #include <log.h>
 #include <StringUtil.h>
 #include <rapidxml.hpp>
+#include <rapidxml_print.hpp>
 #include <boost/bind.hpp>
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <AppFramework.h>
 #include "../MainFrm.h"
 #include "../zmq/MessageQueue.h"
@@ -83,8 +85,7 @@ namespace Forge
 			{
 				XMLMessagePack msg;
 				msg.Decode((char const *)buffer_.data(), buffer_.size());
-
-				std::string const xml_buffer = msg.GetXML();
+				std::string xml_buffer = StringUtil::utf8_to_gbk(msg.GetXML().c_str());
 
 				bool read_header = true;
 				rapidxml::xml_document<char>   doc;
@@ -106,23 +107,43 @@ namespace Forge
 						}
 						else if (std::string(att->value()).compare("TrafficAlert") == 0) // TrafficAlert
 						{
-							// 线程消息，截图，周界报警
-							Log::Instance().LogMessage("周界报警！");
-							SendMessage(AppFramework::Instance().GetWnd(), AppFramework::Instance().GetMessageID(), 1, (LPARAM)ip_.c_str());
-
-							// 发送zmq消息
-							std::string msg = "{\"type\":\"周界报警\",\"service_id\":\"menu.menu_state\", \"terminal_id\":\"{192.168.0.114.orz.ec-88-8f-bd-9a-db-40-61-86-76-c3-79-00-50-56-c0-00-01-00-50-56-c0-00-08}0b2cb2f3fcfcf44ece08a94cc4d85d56\"}";
-							AppFramework::Instance().GetMessageQueue()->AddMessage(msg);
+							rapidxml::xml_node<char>* event_alerts = body->first_node("EventAlerts");
+							if (event_alerts != NULL)
+							{
+								rapidxml::xml_node<char>* alert_info = event_alerts->first_node("AlertInfo");
+								if (alert_info != NULL)
+								{
+									std::ostringstream oss;
+									rapidxml::print<char>(oss,*alert_info,rapidxml::print_no_indenting);
+									AppFramework::AlertInfoPtr info = std::make_shared<AppFramework::AlertInfo>();
+									info->alert_type = 1;
+									info->camera_ip = ip_;
+									info->alert_info = oss.str();
+									AppFramework::Instance().Alert(info);
+								}
+							}
 						}
 						else if (std::string(att->value()).compare("AbnormalObjAlert") == 0)    // AbnormalObjAlert
 						{
-							// 线程消息，截图，周界报警
-							Log::Instance().LogMessage("异物报警！");
-							SendMessage(AppFramework::Instance().GetWnd(), AppFramework::Instance().GetMessageID(), 1, (LPARAM)ip_.c_str());
-
-							// 发送zmq消息
-							std::string msg = "{\"type\":\"异物报警\",\"service_id\":\"menu.menu_state\", \"terminal_id\":\"{192.168.0.114.orz.ec-88-8f-bd-9a-db-40-61-86-76-c3-79-00-50-56-c0-00-01-00-50-56-c0-00-08}0b2cb2f3fcfcf44ece08a94cc4d85d56\"}";
-							AppFramework::Instance().GetMessageQueue()->AddMessage(msg);
+							rapidxml::xml_node<char>* event_alerts = body->first_node("AbnormalObjAlerts");
+							if (event_alerts!=NULL)
+							{
+								rapidxml::xml_node<char>* alert_info = event_alerts->first_node("AlertInfo");
+								if (alert_info != NULL)
+								{
+									rapidxml::xml_node<char>* camera_ip = alert_info->first_node("CameraIP");
+									if (camera_ip != NULL)
+									{
+										std::ostringstream oss;
+										rapidxml::print<char>(oss, *alert_info, rapidxml::print_no_indenting);
+										AppFramework::AlertInfoPtr info = std::make_shared<AppFramework::AlertInfo>();
+										info->alert_type = 2;
+										info->camera_ip = camera_ip->value();
+										info->alert_info = oss.str();
+										AppFramework::Instance().Alert(info);
+									}
+								}
+							}
 						}
 						else
 						{
@@ -133,7 +154,6 @@ namespace Forge
 
 				if (read_header)
 				{
-					//Log::Instance().LogMessage(msg.GetXML());
 					DoReadHeader();
 				}
 			}

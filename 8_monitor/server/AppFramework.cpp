@@ -6,6 +6,7 @@
 #include <StringUtil.h>
 #include "../zmq/MessageQueue.h"
 #include <rapidxml.hpp>
+#include "../zmq/Block.h"
 
 #pragma comment(lib, "libvlc.lib")
 #pragma comment(lib, "libvlccore.lib")
@@ -25,7 +26,8 @@ namespace Forge
 		server_(io_service_, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)),
 		vlc_ins_(NULL),
 		message_id_(0),
-		hwnd_(NULL)
+		hwnd_(NULL),
+		alert_running_(true)
 	{
 		// log
 		log_ = std::make_shared<Log>();
@@ -56,6 +58,14 @@ namespace Forge
 
 	AppFramework::~AppFramework()
 	{
+		alert_running_ = false;
+
+		if (alert_thread_)
+		{
+			block_->release();
+			alert_thread_->join();
+		}
+
 		if (vlc_ins_ != NULL)
 		{
 			libvlc_release(vlc_ins_);
@@ -64,6 +74,11 @@ namespace Forge
 
 	void AppFramework::Start()
 	{
+		// alert thread
+		block_ = std::make_shared<Block>();
+		alert_thread_ = std::make_shared<std::thread>(std::bind(&AppFramework::AlertFunc, this));
+		Log::Instance().LogMessage("alert thread started!");
+
 		// start zmq connect
 		msg_queue_->Initialize("localhost",1984);
 		Log::Instance().LogMessage("zmq thread started!");
@@ -124,6 +139,38 @@ namespace Forge
 		return config_;
 	}
 
+	void AppFramework::Alert(AppFramework::AlertInfoPtr const & info)
+	{
+		std::lock_guard<std::mutex> lock(alert_mutex_);
+		alert_queue_.push(info);
+		UpdateBlock();
+	}
+
+	void AppFramework::AlertFunc()
+	{
+		while (alert_running_)
+		{
+			if (alert_queue_.empty())
+				block_->block();
+			{
+				std::lock_guard<std::mutex> lock(alert_mutex_);
+				if (!alert_queue_.empty())
+				{
+					// do something
+					AlertInfoPtr const & info = alert_queue_.front();
+
+					// send to main thread
+					SendMessage(hwnd_, message_id_, (WPARAM)info->alert_type, (LPARAM)info.get());
+
+					// zmq
+
+					alert_queue_.pop();
+				}
+			}
+			UpdateBlock();
+		}
+	}
+
 	void AppFramework::InitConfig(AppConfig & config)
 	{
 		std::string xml_buffer;
@@ -180,5 +227,10 @@ namespace Forge
 					config.zmq_port = atoi(port->value());
 			}
 		}
+	}
+
+	void AppFramework::UpdateBlock()
+	{
+		block_->set(!alert_queue_.empty());
 	}
 }

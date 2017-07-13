@@ -84,6 +84,11 @@ public:
 		gbk2utf8
 	*/
 	static std::string gbk_to_utf8(const char* gbk);
+
+	/**
+		utf82gbk
+	*/
+	static std::string utf8_to_gbk(const char* utf8);
 };
 }
 #endif // StringUtil_h__

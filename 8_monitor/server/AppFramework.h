@@ -10,6 +10,9 @@
 #include <ServerTree.h>
 #include <Singleton.h>
 #include <vlc/vlc.h>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 namespace Forge
 {
@@ -24,10 +27,22 @@ namespace Forge
 		uint32_t    zmq_port;
 	};
 
+	class Block;
 	class MessageQueue;
 	class AppFramework : public Singleton<AppFramework>
 	{
 	public:
+		struct AlertInfo
+		{
+			uint8_t     alert_type;
+			std::string camera_ip;
+			std::string alert_info;
+
+			AlertInfo() : alert_type(0) {}
+		};
+		typedef std::shared_ptr<AlertInfo> AlertInfoPtr;
+
+
 		static AppFramework & Instance();
 		AppFramework();
 		~AppFramework();
@@ -49,8 +64,14 @@ namespace Forge
 
 		AppConfig const & GetAppConfig() const;
 
+		void Alert(AppFramework::AlertInfoPtr const & info);
+
+		// thread func
+		void AlertFunc();
+
 	protected:
 		void InitConfig(AppConfig & config);
+		void UpdateBlock();
 
 	protected:
 		uint16_t port_;
@@ -62,8 +83,18 @@ namespace Forge
 		UINT                    message_id_;
 		HWND                    hwnd_;
 
+		// message queue
 		std::shared_ptr<MessageQueue> msg_queue_;
+		
+		// app config
 		AppConfig config_;
+
+		// alert thread
+		std::mutex                   alert_mutex_;
+		std::shared_ptr<Block>       block_;
+		std::shared_ptr<std::thread> alert_thread_;
+		bool                         alert_running_;
+		std::queue<AlertInfoPtr>     alert_queue_;
 	};
 	typedef std::shared_ptr<AppFramework> AppFrameworkPtr;
 }

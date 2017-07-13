@@ -149,6 +149,26 @@ std::string StringUtil::gbk_to_utf8(const char* gbk)
 	return utf8;
 }
 
+std::string StringUtil::utf8_to_gbk(const char* utf8)
+{
+	if (!utf8) return "";
+	wchar_t* widechar = NULL;
+	char* multibyte = NULL;
+	int length = 0;
+	length = ::MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+	if (length <= 0) return "";
+	widechar = new wchar_t[length];
+	::MultiByteToWideChar(CP_UTF8, 0, utf8, -1, widechar, length);
+	length = ::WideCharToMultiByte(CP_ACP, 0, widechar, -1, NULL, 0, NULL, NULL);
+	if (length <= 0) { delete[] widechar; return ""; }
+	multibyte = new char[length];
+	::WideCharToMultiByte(CP_ACP, 0, widechar, -1, multibyte, length, NULL, NULL);
+	delete[] widechar;
+	std::string gbk(multibyte);
+	delete[] multibyte;
+	return gbk;
+}
+
 void StringUtil::replace2(std::string & source_str, std::string const & what, std::string const & replaced_what)
 {
 	std::string::size_type pos = 0;

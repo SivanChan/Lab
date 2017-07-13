@@ -17,7 +17,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(简体，中国) resources
+// Chinese (Simplified, PRC) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
@@ -424,14 +424,14 @@ END
 
 STRINGTABLE
 BEGIN
-    IDR_MAINFRAME           "8_monitor"
+    IDR_MAINFRAME           "monitor"
     IDR_My8_monitorTYPE     "\nMy8_monitor\n8_monitor\n\n\nMy8monitor.Document\n8_monitor.Document"
     ID_WINDOW_MANAGER       "窗口(&W)..."
 END
 
 STRINGTABLE
 BEGIN
-    AFX_IDS_APP_TITLE       "8_monitor"
+    AFX_IDS_APP_TITLE       "monitor"
     AFX_IDS_IDLEMESSAGE     "就绪"
 END
 
@@ -580,7 +580,7 @@ BEGIN
     IDS_EDIT_MENU           "编辑"
 END
 
-#endif    // 中文(简体，中国) resources
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -69,8 +69,8 @@ LRESULT CMainFrame::OnThreadMessage(WPARAM wParam, LPARAM lParam)
 {
 	if (wParam == 1)
 	{
-		std::string ip = (char*)lParam;
-		std::string rtsp_str = Forge::StringUtil::format("rtsp://%s:%d/%s", ip.c_str(), Forge::AppFramework::Instance().GetAppConfig().camera_port, Forge::AppFramework::Instance().GetAppConfig().camera_sub_add.c_str());
+		Forge::AppFramework::AlertInfo* info = (Forge::AppFramework::AlertInfo*)lParam;
+		std::string rtsp_str = Forge::StringUtil::format("rtsp://%s:%d/%s", info->camera_ip.c_str(), Forge::AppFramework::Instance().GetAppConfig().camera_port, Forge::AppFramework::Instance().GetAppConfig().camera_sub_add.c_str());
 		std::wstring wstr;
 
 		Forge::StringUtil::StringConvert(rtsp_str, wstr);
@@ -78,8 +78,8 @@ LRESULT CMainFrame::OnThreadMessage(WPARAM wParam, LPARAM lParam)
 
 		std::stringstream out_stream;
 		out_stream << "类型 - 周界报警\r\n"
-			<< "相机 - " << ip.c_str() << "\r\n\r\n"
-			<< "内容 - " << "\r\n"
+			<< "相机 - " << info->camera_ip.c_str() << "\r\n\r\n"
+			<< "内容 - " << info->alert_info.c_str() << "\r\n"
 			<< "截图 - " << path.c_str();
 
 		ShowMsgBox(out_stream.str());
