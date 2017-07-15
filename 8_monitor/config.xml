@@ -4,6 +4,12 @@
 	<cameras port="6554" sub_add="live2">
 		<ip>192.168.1.223</ip>
 	</cameras>
+  <video>
+    <width>300</width>
+    <height>200</height>
+    <x></x>
+    <y></y>
+  </video>
 	<zmq>
 		<ip>localhost</ip>
 		<port>1984</port>

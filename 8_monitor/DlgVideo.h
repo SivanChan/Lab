@@ -24,6 +24,7 @@ public:
 		~VideoPanel();
 
 		void PlayVideo(std::string const & url);
+		HWND GetVideoHwnd();
 
 	private:
 		libvlc_media_player_t *  vlc_player_;
@@ -48,4 +49,6 @@ public:
 	afx_msg void OnParentNotify(UINT message, LPARAM lParam);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 };

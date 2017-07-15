@@ -101,7 +101,7 @@ void CMainFrame::ShowMsgBox(std::string const & msg)
 	if (!msg_box_)
 		msg_box_ = std::make_shared<DlgMsgBox>();
 	if (msg_box_->GetSafeHwnd() == NULL)
-		msg_box_->Create(DlgMsgBox::IDD, this);
+		msg_box_->Create(DlgMsgBox::IDD, NULL);
 	msg_box_->SetMsg(msg);
 	msg_box_->ShowWindow(SW_SHOW);
 
@@ -127,16 +127,22 @@ void CMainFrame::DoMonitorMode(bool monitor_mode)
 			if (!video_dlg_)
 				video_dlg_ = std::make_shared<DlgVideo>();
 			if (video_dlg_->GetSafeHwnd() == NULL)
-				video_dlg_->Create(DlgVideo::IDD, this);
+				video_dlg_->Create(DlgVideo::IDD, NULL);
 			video_dlg_->ShowWindow(SW_SHOW);
 
 			CRect rect, rc;
 			video_dlg_->GetWindowRect(&rect);
 			GetDesktopWindow()->GetWindowRect(&rc);
-
 			int x = rc.left;
 			int y = rc.bottom - rect.Height();
 			y -= 30;
+
+			Forge::AppConfig const & config = Forge::AppFramework::Instance().GetAppConfig();
+			if (config.custom_pos)
+			{
+				x = config.x;
+				y = config.y;
+			}
 			rect.MoveToXY(x, y);
 			video_dlg_->MoveWindow(&rect);
 		}

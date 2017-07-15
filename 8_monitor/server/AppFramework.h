@@ -29,7 +29,16 @@ namespace Forge
 		uint32_t video_width;
 		uint32_t video_height;
 
-		AppConfig() : video_width(300), video_height(200)
+		bool custom_pos;
+		int x;
+		int y;
+		bool need_save;
+
+		AppConfig() : video_width(300), video_height(200),
+			custom_pos(false),
+			x(0),
+			y(0),
+			need_save(false)
 		{
 		}
 	};
@@ -70,6 +79,7 @@ namespace Forge
 		HWND GetWnd() const;
 
 		AppConfig const & GetAppConfig() const;
+		AppConfig & GetAppConfig();
 
 		void Alert(AppFramework::AlertInfoPtr const & info);
 
@@ -79,6 +89,7 @@ namespace Forge
 	protected:
 		void InitConfig(AppConfig & config);
 		void UpdateBlock();
+		void SaveAppConfig();
 
 	protected:
 		uint16_t port_;
