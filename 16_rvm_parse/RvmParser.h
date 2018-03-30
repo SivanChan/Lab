@@ -16,7 +16,7 @@ public:
 	enum RvmType
 	{
 		RT_Unknown,
-		RT_TEXT,    // ÔÝ²»Ö§³Ö
+		RT_TEXT,    
 		RT_BINARY
 	};
 
